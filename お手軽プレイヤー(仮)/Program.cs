@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace お手軽プレイヤー_仮_
+namespace LightPlayer
 {
     static class Program
     {
@@ -16,7 +13,13 @@ namespace お手軽プレイヤー_仮_
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault( false );
-            Application.Run( new Form1() );
+
+            var view = new View();
+            var model = new Model();
+            var contorller = new Controller( view, model );
+            view.SetEventHandler( contorller );
+
+            Application.Run( view );
         }
     }
 }
