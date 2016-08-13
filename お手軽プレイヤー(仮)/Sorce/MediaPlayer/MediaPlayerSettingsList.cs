@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace LightPlayer
 {
-    /// <summary>
-    /// メディアプレイヤーコントロール（全部）の保存用情報
+    /// <summary>メディアプレイヤー（全部）の保存用情報
     /// </summary>
 
     [System.Xml.Serialization.XmlRoot( "settingsList" )]

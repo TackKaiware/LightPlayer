@@ -11,7 +11,7 @@ namespace LightPlayer
         #region プロパティ
 
         /// <summary>
-        /// メディアプレイヤーコントロールのリスト
+        /// メディアプレイヤーのリスト
         /// </summary>
         public List<MediaPlayer> MediaPlayerList { get; }
 
@@ -26,7 +26,7 @@ namespace LightPlayer
         {
             InitializeComponent();
 
-            // メディアプレイヤーコントロールのリストを生成
+            // メディアプレイヤーのリストを生成
             MediaPlayerList = new List<MediaPlayer>();
             for ( var id = 0; id < tableLayoutPanel1.RowCount; id++ )
             {
@@ -38,7 +38,7 @@ namespace LightPlayer
         }
 
         /// <summary>
-        /// メディアプレイヤコントロールーの各コントールにイベントを割り当てる
+        /// メディアプレイヤーの各コントールにイベントを割り当てる
         /// </summary>
         /// <param name="controller"></param>
         public void SetEventHandler( Controller controller )

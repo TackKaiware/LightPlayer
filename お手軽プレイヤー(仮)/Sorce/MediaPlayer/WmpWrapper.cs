@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using WMPLib;
 
 namespace LightPlayer
@@ -36,20 +35,7 @@ namespace LightPlayer
         public string FilePath
         {
             get { return _mediaPlayer.URL; }
-            set
-            {   // 現在保持しているパス情報をクリア
-                _mediaPlayer.URL = string.Empty;
-
-                // 有効なファイルパスか？
-                if ( ( !value.Equals( string.Empty ) ) &&
-                     ( INVALID_PATH_CHARS.All( x => !value.Contains( x ) ) ) )
-                {
-                    // 対応可能なファイルタイプの場合のみセットする
-                    var fileInfo = new FileInfo( value );
-                    if ( AVAILABLE_FILE_TYPES.Contains( fileInfo.Extension.ToLower() ) )
-                        _mediaPlayer.URL = value;
-                }
-            }
+            set { _mediaPlayer.URL = value; }
         }
 
         public string FileName

@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 
-#region typedef
-
-//using Settings = LightPlayer.MediaPlayerSettings;
-//using SettingsList = LightPlayer.MediaPlayerSettingsList;
-
-#endregion typedef
-
 namespace LightPlayer
 {
     /// <summary>
-    /// メディアプレイヤーコントロール設定の保存・読み込みを管理する
+    /// メディアプレイヤー設定の保存・読み込みを管理する
     /// </summary>
     public class MediaPlayerSettingsManager
     {
         #region 定数
 
         /// <summary>
-        /// メディアプレイヤーコントロール設定保存用XMLファイルのフルパス
+        /// メディアプレイヤー設定保存用XMLファイルのフルパス
         /// </summary>
         static readonly string SETTINGS_XML_PATH = Environment.CurrentDirectory + @"\settings.xml";
 
@@ -28,7 +21,7 @@ namespace LightPlayer
         #region 公開メソッド
 
         /// <summary>
-        /// メディアプレイヤーコントロール設定を書き込む
+        /// メディアプレイヤー設定を書き込む
         /// </summary>
         public void Save( List<MediaPlayer> mediaPlayerList )
         {
@@ -39,7 +32,7 @@ namespace LightPlayer
                     if ( stream != null )
                         stream.Close();
 
-            // メディアプレイヤーコントロールの設定情報を生成・リストに追加する
+            // メディアプレイヤーの設定情報を生成・リストに追加する
             var settingsList = new MediaPlayerSettingsList();
             mediaPlayerList.ForEach( mp =>
             {
@@ -58,7 +51,7 @@ namespace LightPlayer
         }
 
         /// <summary>
-        /// メディアプレイヤーコントロール設定を読み込む
+        /// メディアプレイヤー設定を読み込む
         /// </summary>
         /// <param name="mediaPlayerList"></param>
         public void Load( List<MediaPlayer> mediaPlayerList )
@@ -74,7 +67,7 @@ namespace LightPlayer
             var settingsList = ( MediaPlayerSettingsList )XmlAccesser.Read(
                 SETTINGS_XML_PATH, typeof( MediaPlayerSettingsList ) );
 
-            // 読み込んだ設定情報をメディアプレイヤーコントロールに反映する
+            // 読み込んだ設定情報をメディアプレイヤーに反映する
             mediaPlayerList.ForEach( mp =>
             {
                 var settings = settingsList.Find( s => s.Id == mp.Id );

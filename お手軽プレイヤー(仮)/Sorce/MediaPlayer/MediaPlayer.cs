@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace LightPlayer
 {
     public partial class MediaPlayer : UserControl
     {
+        #region 定数
         public static readonly Color COLOR_FILENAME_TEXTBOX_PLAYING = Color.GreenYellow;
         public static readonly Color COLOR_FILENAME_TEXTBOX_STOP = Color.Silver;
+        private static readonly List<string> AVAILABLE_FILE_TYPES = new List<string>{ ".wav", ".mp3", ".mid" };
+        private static readonly List<char>INVALID_PATH_CHARS = new List<char>( Path.GetInvalidPathChars() );
+        #endregion 定数
 
         public MediaPlayer( int id ) : this()
         {
@@ -58,6 +64,35 @@ namespace LightPlayer
             LoopCheckBox.CheckedChanged += loopCheckBox_CheckedChanged;
             ClearButton.Click += clearButton_Click;
             VolumeBar.Scroll += volumeBar_Scroll;
+        }
+
+        public void SetFilePath( string filePath )
+        {
+            // 対応可能なファイルタイプの場合のみセットする
+            var fileInfo = new FileInfo( filePath );
+            if ( AVAILABLE_FILE_TYPES.Contains( fileInfo.Extension.ToLower() ) )
+            {
+                Player.FilePath = filePath;
+                FileNameTextBox.Text = Player.FileName;
+            }
+        }
+
+        public void SwitchLoopMode()
+        {
+            Player.LoopMode = !Player.LoopMode;
+        }
+
+        public void ClearSettings()
+        {
+            VolumeBar.Value = WmpWrapper.INIT_VOLUME;
+            LoopCheckBox.Checked = false;
+            Player.Clear();
+            FileNameTextBox.Text = Player.FileName;
+        }
+
+        public void SetVolume(int volume)
+        {
+            VolumeBar.Value = volume;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -32,6 +33,18 @@ namespace LightPlayer
             }
 
             return id;
+        }
+
+        /// <summary>
+        /// 再生中のメディアプレイヤーのIDを取得する
+        /// 再生中のメディアプレイヤーが無い場合は、0を返す
+        /// </summary>
+        /// <param name="mediaPlayerList"></param>
+        /// <returns></returns>
+        public static int GetPlayingId( this List<MediaPlayer> mediaPlayerList )
+        {
+            var id = mediaPlayerList.IndexOf( mediaPlayerList.Find( mp => mp.Player.IsPlaying ) );
+            return id > 0 ? id : 0;
         }
     }
 }

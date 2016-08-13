@@ -40,12 +40,8 @@ namespace LightPlayer
         /// </summary>
         public void FileNameTextBox_DragDrop( object sender, DragEventArgs e )
         {
-            var index = GetId( sender );
-            var mediaControlGroup = _mediaPlayerList[index];
-
             var filePath = ( ( string[] )e.Data.GetData( DataFormats.FileDrop, false ) ).First();
-            mediaControlGroup.Player.FilePath = filePath;
-            mediaControlGroup.FileNameTextBox.Text = mediaControlGroup.Player.FileName;
+            _mediaPlayerList[GetId( sender )].SetFilePath( filePath );
         }
 
         /// <summary>
@@ -65,17 +61,14 @@ namespace LightPlayer
         public void PlayButton_Click( object sender, EventArgs e )
         {
             // 再生中のメディアプレイヤーは停止させる
-            var stopIndex = _mediaPlayerList.IndexOf( _mediaPlayerList.Find( x => x.Player.IsPlaying ) );
-            if ( stopIndex >= 0 )
-            {
-                _state.SetState( stopIndex, MediaPlayerStateEnum.StopFromPlaying );
-                _mediaPlayerList[stopIndex].Player.Stop();
-            }
+            var id = _mediaPlayerList.GetPlayingId();
+            _state.SetState( id, MediaPlayerStateEnum.StopFromPlaying );
+            _mediaPlayerList[id].Player.Stop();
 
             // 指定したメディアプレイヤーを再生する
-            var mediaPlayerList = _mediaPlayerList[GetId( sender )];
-            mediaPlayerList.Player.Play();
-            _state.SetState( mediaPlayerList.Id, MediaPlayerStateEnum.Playing );
+            var mediaPlayer = _mediaPlayerList[GetId( sender )];
+            mediaPlayer.Player.Play();
+            _state.SetState( mediaPlayer.Id, MediaPlayerStateEnum.Playing );
         }
 
         /// <summary>
@@ -94,10 +87,7 @@ namespace LightPlayer
         /// </summary>
         public void LoopCheckBox_CheckedChanged( object sender, EventArgs e )
         {
-            var loopCheckBox = ( CheckBox )sender;
-            var index = GetId( sender );
-
-            _mediaPlayerList[index].Player.LoopMode = loopCheckBox.Checked;
+            _mediaPlayerList[GetId( sender )].SwitchLoopMode();
         }
 
         /// <summary>
@@ -105,12 +95,7 @@ namespace LightPlayer
         /// </summary>
         public void ClearButton_Click( object sender, EventArgs e )
         {
-            var mediaControlGroup = _mediaPlayerList[GetId( sender )];
-
-            mediaControlGroup.VolumeBar.Value = WmpWrapper.INIT_VOLUME;
-            mediaControlGroup.LoopCheckBox.Checked = false;
-            mediaControlGroup.Player.Clear();
-            mediaControlGroup.FileNameTextBox.Text = mediaControlGroup.Player.FileName;
+            _mediaPlayerList[GetId( sender )].ClearSettings();
         }
 
         /// <summary>
@@ -118,10 +103,8 @@ namespace LightPlayer
         /// </summary>
         public void trackBar_VolumeBar_Scroll( object sender, EventArgs e )
         {
-            var volumeBar = ( TrackBar )sender;
-            var mediaControlGroup = _mediaPlayerList[GetId( sender )];
-
-            mediaControlGroup.Player.Volume = volumeBar.Value;
+            var volume = ( ( TrackBar )sender ).Value;
+            _mediaPlayerList[GetId( sender )].SetVolume( volume );
         }
 
         /// <summary>
@@ -131,7 +114,7 @@ namespace LightPlayer
         {
             try
             {
-                // 設定情報をメディアプレイヤーコントロールに読み込む
+                // 設定情報をメディアプレイヤーに読み込む
                 _model.SettingManager.Load( _mediaPlayerList );
             }
             catch ( FileNotFoundException )
@@ -153,7 +136,7 @@ namespace LightPlayer
         {
             try
             {
-                // メディアプレイヤーコントロールの設定情報を書き込む
+                // メディアプレイヤーの設定情報を書き込む
                 _model.SettingManager.Save( _mediaPlayerList );
             }
             catch ( InvalidOperationException )

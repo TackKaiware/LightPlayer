@@ -1,7 +1,7 @@
 ﻿namespace LightPlayer
 {
     /// <summary>
-    /// メディアプレイヤーコントロール（1つ分）の保存用情報
+    /// メディアプレイヤー（1つ分）の保存用情報
     /// </summary>
     public class MediaPlayerSettings
     {
