@@ -2,8 +2,8 @@
 {
     public enum MediaPlayerStateEnum
     {
-        Stop,
-        StopFromPlaying,
+        Stopped,
         Playing,
+        LockedByOtherPlaying
     }
 }

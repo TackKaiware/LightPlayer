@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
+using static LightPlayer.MediaPlayerStateEnum;
+
 namespace LightPlayer
 {
     /// <summary>
@@ -36,26 +38,30 @@ namespace LightPlayer
         {
             // 再生中のメディアプレイヤーは停止させる
             var playingId = MediaPlayers.GetPlayingId();
-
-            // #State
-            //_state.SetState( id, MediaPlayerStateEnum.StopFromPlaying );
             MediaPlayers[playingId].Player.Stop();
 
             // 指定したメディアプレイヤーを再生する
             var id = sender.GetId();
             MediaPlayers[id].Player.Play();
 
-            // #State
-            //_state.SetState( mediaPlayer.Id, MediaPlayerStateEnum.Playing );
+            // メディアプレイヤーの外観を更新
+            foreach ( var mp in MediaPlayers )
+            {
+                if ( mp.Id == id )
+                    mp.SetSate( Playing );
+                else
+                    mp.SetSate( LockedByOtherPlaying );
+            }
         }
 
         public void Stop( object sender )
         {
             var id = sender.GetId();
-
-            // #State
-            //_state.SetState( index, MediaPlayerStateEnum.Stop );
             MediaPlayers[id].Player.Stop();
+
+            // メディアプレイヤーの外観を更新
+            foreach ( var mp in MediaPlayers )
+                mp.SetSate( Stopped );
         }
 
         public void SwitchLoopMode( object sender )
