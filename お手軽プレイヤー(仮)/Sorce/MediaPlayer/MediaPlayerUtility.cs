@@ -10,7 +10,7 @@ namespace LightPlayer
         /// <summary>
         /// コントロールの名前の末尾からIDを取得する
         /// </summary>
-        public static int GetId( object sender )
+        public static int GetId( this object sender )
         {
             var id = default( int );
             try
@@ -39,11 +39,11 @@ namespace LightPlayer
         /// 再生中のメディアプレイヤーのIDを取得する
         /// 再生中のメディアプレイヤーが無い場合は、0を返す
         /// </summary>
-        /// <param name="mediaPlayerList"></param>
+        /// <param name="mediaPlayers"></param>
         /// <returns></returns>
-        public static int GetPlayingId( this List<MediaPlayer> mediaPlayerList )
+        public static int GetPlayingId( this List<MediaPlayer> mediaPlayers )
         {
-            var id = mediaPlayerList.IndexOf( mediaPlayerList.Find( mp => mp.Player.IsPlaying ) );
+            var id = mediaPlayers.IndexOf( mediaPlayers.Find( mp => mp.Player.IsPlaying ) );
             return id > 0 ? id : 0;
         }
     }

@@ -6,11 +6,11 @@ namespace LightPlayer
 {
     public class MediaPlayerState
     {
-        readonly List<MediaPlayer> _mediaPlayerList;
+        readonly List<MediaPlayer> _mediaPlayers;
 
-        public MediaPlayerState( List<MediaPlayer> mediaPlayerList )
+        public MediaPlayerState( List<MediaPlayer> mediaPlayers )
         {
-            _mediaPlayerList = mediaPlayerList;
+            _mediaPlayers = mediaPlayers;
         }
 
         public void SetState( int id, MediaPlayerStateEnum state )
@@ -19,32 +19,32 @@ namespace LightPlayer
             {
                 case MediaPlayerStateEnum.Stop:
 
-                    _mediaPlayerList.ForEach( mp =>
+                    _mediaPlayers.ForEach( mp =>
                     {
                         mp.LoopCheckBox.Enabled = true;
                         mp.ClearButton.Enabled = true;
                     } );
-                    _mediaPlayerList[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
                     break;
 
                 case MediaPlayerStateEnum.StopFromPlaying:
-                    _mediaPlayerList.ForEach( mp =>
+                    _mediaPlayers.ForEach( mp =>
                     {
                         mp.LoopCheckBox.Enabled = false;
                         mp.ClearButton.Enabled = false;
                     } );
 
-                    _mediaPlayerList[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
                     break;
 
                 case MediaPlayerStateEnum.Playing:
 
-                    _mediaPlayerList.ForEach( x =>
+                    _mediaPlayers.ForEach( x =>
                     {
                         x.LoopCheckBox.Enabled = false;
                         x.ClearButton.Enabled = false;
                     } );
-                    _mediaPlayerList[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_PLAYING;
+                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_PLAYING;
                     break;
             }
         }

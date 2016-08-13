@@ -13,7 +13,7 @@ namespace LightPlayer
         /// <summary>
         /// メディアプレイヤーのリスト
         /// </summary>
-        public List<MediaPlayer> MediaPlayerList { get; }
+        public List<MediaPlayer> MediaPlayers { get; }
 
         #endregion プロパティ
 
@@ -27,14 +27,14 @@ namespace LightPlayer
             InitializeComponent();
 
             // メディアプレイヤーのリストを生成
-            MediaPlayerList = new List<MediaPlayer>();
+            MediaPlayers = new List<MediaPlayer>();
             for ( var id = 0; id < tableLayoutPanel1.RowCount; id++ )
             {
-                MediaPlayerList.Add( new MediaPlayer( id ) );
+                MediaPlayers.Add( new MediaPlayer( id ) );
             }
 
             // 画面に追加
-            tableLayoutPanel1.Controls.AddRange( MediaPlayerList.ToArray() );
+            tableLayoutPanel1.Controls.AddRange( MediaPlayers.ToArray() );
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace LightPlayer
             Load += controller.View_Load;
             FormClosing += controller.View_FormClosing;
 
-            MediaPlayerList.ForEach( mp => mp.SetEventHandler(
+            MediaPlayers.ForEach( mp => mp.SetEventHandler(
                 controller.FileNameTextBox_DragDrop,
                 controller.FileNameTextBox_DragEnter,
                 controller.PlayButton_Click,

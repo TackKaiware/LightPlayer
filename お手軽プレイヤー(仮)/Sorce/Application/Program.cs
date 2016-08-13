@@ -15,7 +15,7 @@ namespace LightPlayer
             Application.SetCompatibleTextRenderingDefault( false );
 
             var view = new View();
-            var model = new Model();
+            var model = new Model( view.MediaPlayers );
             var contorller = new Controller( view, model );
             view.SetEventHandler( contorller );
 
