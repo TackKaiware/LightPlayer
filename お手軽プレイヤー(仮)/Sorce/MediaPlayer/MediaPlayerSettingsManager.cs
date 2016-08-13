@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 #region typedef
 
-using ControlGroupList = System.Collections.Generic.List<LightPlayer.MPlayerControlGroup>;
-using Settings = LightPlayer.MPlayerControlGroupSettings;
-using SettingsList = LightPlayer.MPlayerControlGroupSettingsList;
+//using Settings = LightPlayer.MediaPlayerSettings;
+//using SettingsList = LightPlayer.MediaPlayerSettingsList;
 
 #endregion typedef
 
@@ -14,7 +14,7 @@ namespace LightPlayer
     /// <summary>
     /// メディアプレイヤーコントロール設定の保存・読み込みを管理する
     /// </summary>
-    public static class MPlayerControlGroupSettingsManager
+    public class MediaPlayerSettingsManager
     {
         #region 定数
 
@@ -30,7 +30,7 @@ namespace LightPlayer
         /// <summary>
         /// メディアプレイヤーコントロール設定を書き込む
         /// </summary>
-        public static void Save( ControlGroupList controlGroupList )
+        public void Save( List<MediaPlayer> mediaPlayerList )
         {
             // 書き込み先のXMLファイルの存在をチェックする
             // 存在しない場合は新規作成する
@@ -40,29 +40,28 @@ namespace LightPlayer
                         stream.Close();
 
             // メディアプレイヤーコントロールの設定情報を生成・リストに追加する
-            var settingsList = new SettingsList();
-            controlGroupList.ForEach( controlGroup =>
+            var settingsList = new MediaPlayerSettingsList();
+            mediaPlayerList.ForEach( mp =>
             {
-                var player = controlGroup.Player;
-
-                settingsList.Add( new Settings(
-                    controlGroup.Index,
-                    player.FilePath,
-                    player.LoopMode,
-                    player.Volume ) );
+                settingsList.Add( new MediaPlayerSettings(
+                    mp.Id,
+                    mp.Player.FilePath,
+                    mp.Player.LoopMode,
+                    mp.Player.Volume ) );
             } );
 
             // 設定情報をXMLファイルに書き込む
             // XmlAccesser.Write()から例外がスローされた場合は
             // ここでcatchせずにそのままコルー元に伝播させる
-            XmlAccesser.Write( SETTINGS_XML_PATH, typeof( SettingsList ), settingsList );
+            XmlAccesser.Write( SETTINGS_XML_PATH,
+                typeof( MediaPlayerSettingsList ), settingsList );
         }
 
         /// <summary>
         /// メディアプレイヤーコントロール設定を読み込む
         /// </summary>
-        /// <param name="mediaCtrls"></param>
-        public static void Load( ControlGroupList controlGroupList )
+        /// <param name="mediaPlayerList"></param>
+        public void Load( List<MediaPlayer> mediaPlayerList )
         {
             // 読み込むのXMLファイルの存在をチェックする
             // 存在しない場合は例外をスローする
@@ -72,21 +71,21 @@ namespace LightPlayer
             // XMLファイルから設定情報を読み込む
             // XmlAccesser.Read()から例外がスローされた場合は
             // ここでcatchせずにそのままコルー元に伝播させる
-            var settingsList = ( SettingsList )XmlAccesser.Read( SETTINGS_XML_PATH, typeof( SettingsList ) );
+            var settingsList = ( MediaPlayerSettingsList )XmlAccesser.Read(
+                SETTINGS_XML_PATH, typeof( MediaPlayerSettingsList ) );
 
             // 読み込んだ設定情報をメディアプレイヤーコントロールに反映する
-            controlGroupList.ForEach( controlGroup =>
+            mediaPlayerList.ForEach( mp =>
             {
-                var settings = settingsList.Find( x => x.Index == controlGroup.Index );
-                var player = controlGroup.Player;
+                var settings = settingsList.Find( s => s.Id == mp.Id );
 
-                player.FilePath = settings.FilePath;
-                player.LoopMode = settings.LoopMode;
-                player.Volume = settings.Volume;
+                mp.Player.FilePath = settings.FilePath;
+                mp.Player.LoopMode = settings.LoopMode;
+                mp.Player.Volume = settings.Volume;
 
-                controlGroup.FileNameTextBox.Text = player.FileName;
-                controlGroup.LoopCheckBox.Checked = player.LoopMode;
-                controlGroup.VolumeBar.Value = player.Volume;
+                mp.FileNameTextBox.Text = mp.Player.FileName;
+                mp.LoopCheckBox.Checked = mp.Player.LoopMode;
+                mp.VolumeBar.Value = mp.Player.Volume;
             } );
         }
 

@@ -9,30 +9,30 @@ namespace LightPlayer
     /// </summary>
 
     [System.Xml.Serialization.XmlRoot( "settingsList" )]
-    public class MPlayerControlGroupSettingsList : IEnumerable<MPlayerControlGroupSettings>
+    public class MediaPlayerSettingsList : IEnumerable<MediaPlayerSettings>
     {
-        public MPlayerControlGroupSettingsList()
+        public MediaPlayerSettingsList()
         {
-            SettingsList = new List<MPlayerControlGroupSettings>();
+            SettingsList = new List<MediaPlayerSettings>();
         }
 
         [System.Xml.Serialization.XmlElement( "settings" )]
-        public List<MPlayerControlGroupSettings> SettingsList { get; set; }
+        public List<MediaPlayerSettings> SettingsList { get; set; }
 
-        public void Add( MPlayerControlGroupSettings settings )
+        public void Add( MediaPlayerSettings settings )
         {
             SettingsList.Add( settings );
         }
 
-        public void Remove( MPlayerControlGroupSettings setings )
+        public void Remove( MediaPlayerSettings setings )
         {
             SettingsList.Remove( setings );
         }
 
-        public MPlayerControlGroupSettings Find( Predicate<MPlayerControlGroupSettings> match )
+        public MediaPlayerSettings Find( Predicate<MediaPlayerSettings> match )
             => SettingsList.Find( match );
 
-        public IEnumerator<MPlayerControlGroupSettings> GetEnumerator()
+        public IEnumerator<MediaPlayerSettings> GetEnumerator()
         {
             foreach ( var settings in SettingsList )
             {

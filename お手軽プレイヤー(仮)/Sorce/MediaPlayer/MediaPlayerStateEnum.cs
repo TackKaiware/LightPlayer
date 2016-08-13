@@ -1,6 +1,6 @@
 ﻿namespace LightPlayer
 {
-    public enum MPlayerControlGroupStateEnum
+    public enum MediaPlayerStateEnum
     {
         Stop,
         StopFromPlaying,

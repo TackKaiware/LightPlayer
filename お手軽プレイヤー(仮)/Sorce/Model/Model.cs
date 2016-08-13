@@ -1,20 +1,15 @@
-﻿using System.Collections.Generic;
-
-namespace LightPlayer
+﻿namespace LightPlayer
 {
     /// <summary>
     /// モデルクラス
     /// </summary>
     public class Model
     {
-        public void SaveSettings( List<MPlayerControlGroup> controlGroupList )
+        public Model()
         {
-            MPlayerControlGroupSettingsManager.Save( controlGroupList );
+            SettingManager = new MediaPlayerSettingsManager();
         }
 
-        public void LoadSettings( List<MPlayerControlGroup> controlGroupList )
-        {
-            MPlayerControlGroupSettingsManager.Load( controlGroupList );
-        }
+        public MediaPlayerSettingsManager SettingManager { get; }
     }
 }

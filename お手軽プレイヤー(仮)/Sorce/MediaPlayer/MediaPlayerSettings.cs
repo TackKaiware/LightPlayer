@@ -3,28 +3,28 @@
     /// <summary>
     /// メディアプレイヤーコントロール（1つ分）の保存用情報
     /// </summary>
-    public class MPlayerControlGroupSettings
+    public class MediaPlayerSettings
     {
         /// <summary>
         /// XML読み書き用のデフォルトコンストラクタ
         /// </summary>
-        public MPlayerControlGroupSettings()
+        public MediaPlayerSettings()
         {
         }
 
         /// <summary>
         /// 保存情報生成用の引数有りコンストラクタ
         /// </summary>
-        public MPlayerControlGroupSettings( int index, string filePath, bool loopMode, int volume )
+        public MediaPlayerSettings( int id, string filePath, bool loopMode, int volume )
         {
-            Index = index;
+            Id = id;
             FilePath = filePath;
             LoopMode = loopMode;
             Volume = volume;
         }
 
-        [System.Xml.Serialization.XmlElement( "index" )]
-        public int Index { get; set; }
+        [System.Xml.Serialization.XmlElement( "id" )]
+        public int Id { get; set; }
 
         [System.Xml.Serialization.XmlElement( "filePath" )]
         public string FilePath { get; set; }

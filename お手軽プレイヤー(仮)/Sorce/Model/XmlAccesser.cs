@@ -15,7 +15,7 @@ namespace LightPlayer
             using ( var reader = new StreamReader( xmlPath, new UTF8Encoding( false ) ) )
             {
                 var serializer = new XmlSerializer( type );
-                return serializer.Deserialize( reader );
+                return ( serializer.Deserialize( reader ) );
             }
         }
 
