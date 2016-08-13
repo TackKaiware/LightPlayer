@@ -54,25 +54,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControlExtension.cs" />
-    <Compile Include="Controller.cs" />
-    <Compile Include="MPlayerControlGroupState.cs" />
-    <Compile Include="MPlayerControlGroupStateEnum.cs" />
-    <Compile Include="MPlayerControlGroup.cs" />
-    <Compile Include="MPlayerControlGroupSettings.cs" />
-    <Compile Include="MPlayerControlGroupSettingsList.cs" />
-    <Compile Include="MPlayerControlGroupSettingsManager.cs" />
-    <Compile Include="WmpWrapper.cs" />
-    <Compile Include="Model.cs" />
-    <Compile Include="View.cs">
+    <Compile Include="Sorce\Control\ControlExtension.cs" />
+    <Compile Include="Sorce\Control\Controller.cs" />
+    <Compile Include="Sorce\MPlayer\MPlayerControlGroupState.cs" />
+    <Compile Include="Sorce\MPlayer\MPlayerControlGroupStateEnum.cs" />
+    <Compile Include="Sorce\MPlayer\MPlayerControlGroup.cs" />
+    <Compile Include="Sorce\MPlayer\MPlayerControlGroupSettings.cs" />
+    <Compile Include="Sorce\MPlayer\MPlayerControlGroupSettingsList.cs" />
+    <Compile Include="Sorce\MPlayer\MPlayerControlGroupSettingsManager.cs" />
+    <Compile Include="Sorce\MPlayer\WmpWrapper.cs" />
+    <Compile Include="Sorce\Model\Model.cs" />
+    <Compile Include="Sorce\View\View.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View.Designer.cs">
+    <Compile Include="Sorce\View\View.Designer.cs">
       <DependentUpon>View.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Sorce\Application\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlAccesser.cs" />
+    <Compile Include="Sorce\Model\XmlAccesser.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -83,7 +83,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="View.resx">
+    <EmbeddedResource Include="Sorce\View\View.resx">
       <DependentUpon>View.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
