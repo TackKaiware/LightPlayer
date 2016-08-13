@@ -1,38 +1,51 @@
-﻿namespace LightPlayer
-{
-    using static MediaPlayer;
+﻿using System.Collections.Generic;
 
+using static LightPlayer.MediaPlayer;
+
+namespace LightPlayer
+{
     public class MediaPlayerState
     {
-        private MediaPlayer _mediaPlayer;
+        readonly List<MediaPlayer> _mediaPlayers;
 
-        public MediaPlayerState( MediaPlayer mediaPlayer )
+        public MediaPlayerState( List<MediaPlayer> mediaPlayers )
         {
-            _mediaPlayer = mediaPlayer;
+            _mediaPlayers = mediaPlayers;
         }
 
-        public void SetState( MediaPlayerStateEnum state )
+        public void SetState( int id, MediaPlayerStateEnum state )
         {
             switch ( state )
             {
-                case MediaPlayerStateEnum.Stopped:
-                    _mediaPlayer.LoopCheckBox.Enabled = true;
-                    _mediaPlayer.ClearButton.Enabled = true;
-                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                case MediaPlayerStateEnum.Stop:
+
+                    _mediaPlayers.ForEach( mp =>
+                    {
+                        mp.LoopCheckBox.Enabled = true;
+                        mp.ClearButton.Enabled = true;
+                    } );
+                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                    break;
+
+                case MediaPlayerStateEnum.StopFromPlaying:
+                    _mediaPlayers.ForEach( mp =>
+                    {
+                        mp.LoopCheckBox.Enabled = false;
+                        mp.ClearButton.Enabled = false;
+                    } );
+
+                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
                     break;
 
                 case MediaPlayerStateEnum.Playing:
-                    _mediaPlayer.LoopCheckBox.Enabled = false;
-                    _mediaPlayer.ClearButton.Enabled = false;
-                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_PLAYING;
-                    break;
 
-                case MediaPlayerStateEnum.LockedByOtherPlaying:
-                    _mediaPlayer.LoopCheckBox.Enabled = false;
-                    _mediaPlayer.ClearButton.Enabled = false;
-                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                    _mediaPlayers.ForEach( x =>
+                    {
+                        x.LoopCheckBox.Enabled = false;
+                        x.ClearButton.Enabled = false;
+                    } );
+                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_PLAYING;
                     break;
-
             }
         }
     }
