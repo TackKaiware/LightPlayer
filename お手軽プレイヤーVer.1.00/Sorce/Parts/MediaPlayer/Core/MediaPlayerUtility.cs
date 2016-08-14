@@ -6,9 +6,9 @@ using System.Windows.Forms;
 namespace LightPlayer
 {
     /// <summary>
-    /// メディアプレイヤーに関連する便利メソッド群
+    /// メディアプレイヤーに関連するメソッド群
     /// </summary>
-    public static class MediaPlayerUtility
+    public static class MediaPlayerLibrary
     {
         /// <summary>
         /// コントロールの名前の末尾からIDを取得する

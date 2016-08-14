@@ -1,0 +1,6 @@
+﻿namespace LightPlayer
+{
+    class DataBrigde
+    {
+    }
+}

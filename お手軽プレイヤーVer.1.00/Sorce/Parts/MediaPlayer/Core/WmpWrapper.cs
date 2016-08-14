@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using WMPLib;
 
 namespace LightPlayer
@@ -18,6 +19,11 @@ namespace LightPlayer
         #endregion 定数
 
         #region フィールド
+
+        /// <summary>
+        /// 排他制御のためのロックオブジェクト
+        /// </summary>
+        private static object _lockObj = new object();
 
         /// <summary>
         /// Windowsメディアプレイヤー
@@ -83,7 +89,14 @@ namespace LightPlayer
         /// 再生中か？
         /// </summary>
         public bool IsPlaying
-            => _mediaPlayer.playState.Equals( WMPPlayState.wmppsPlaying );
+            => _mediaPlayer.playState.Equals( WMPPlayState.wmppsPlaying ) ||
+               _mediaPlayer.playState.Equals( WMPPlayState.wmppsTransitioning );
+
+        /// <summary>
+        /// 停止したか？
+        /// </summary>
+        public bool IsStopped
+            => _mediaPlayer.playState.Equals( WMPPlayState.wmppsStopped );
 
         /// <summary>
         /// 音量
@@ -101,11 +114,16 @@ namespace LightPlayer
         /// <summary>
         /// 再生する
         /// </summary>
-        public void Play()
+        public void PlayBack()
         {
-            // URLが有効な場合のみ再生する
-            if ( !string.IsNullOrWhiteSpace( _mediaPlayer.URL ) )
-                _mediaPlayer.controls.play();
+            Task.Run( () =>
+             {
+                 // URLが有効な場合のみ　かつ
+                 // 現在再生中でない場合再生する
+                 if ( !string.IsNullOrWhiteSpace( _mediaPlayer.URL ) && !IsPlaying )
+                     lock ( _lockObj )
+                         _mediaPlayer.controls.play();
+             } );
         }
 
         /// <summary>
@@ -113,7 +131,8 @@ namespace LightPlayer
         /// </summary>
         public void Stop()
         {
-            _mediaPlayer.controls.stop();
+            lock ( _lockObj )
+                _mediaPlayer.controls.stop();
         }
 
         /// <summary>
@@ -121,7 +140,9 @@ namespace LightPlayer
         /// </summary>
         public void Clear()
         {
-            _mediaPlayer.URL = string.Empty;
+            lock ( _lockObj )
+                _mediaPlayer.URL = string.Empty;
+
             Volume = INIT_VOLUME;
         }
 

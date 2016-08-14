@@ -27,6 +27,8 @@
 
         #endregion コンストラクタ
 
+        #region プロパティ
+
         /// <summary>
         /// ID
         /// </summary>
@@ -50,5 +52,7 @@
         /// </summary>
         [System.Xml.Serialization.XmlElement( "volume" )]
         public int Volume { get; set; }
+
+        #endregion プロパティ
     }
 }

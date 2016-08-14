@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static LightPlayer.View;
 
 namespace LightPlayer
 {
@@ -19,9 +17,14 @@ namespace LightPlayer
         private View _view;
 
         /// <summary>
-        /// モデルへの参照
+        /// メディアプレイヤーモデルへの参照
         /// </summary>
-        private Model _model;
+        private MediaPlayerModel _playerModel;
+
+        /// <summary>
+        /// コンフィグレーションモデルへの実体
+        /// </summary>
+        private ConfigurationModel _configModel;
 
         #endregion フィールド
 
@@ -30,15 +33,18 @@ namespace LightPlayer
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public Controller( View view, Model model )
+        public Controller( View view, MediaPlayerModel playerModel, ConfigurationModel configModel )
         {
             _view = view;
-            _model = model;
+            _playerModel = playerModel;
+            _configModel = configModel;
         }
 
         #endregion コンストラクタ
 
         #region 公開メソッド（コントロールのイベント）
+
+        #region メディアプレイヤー
 
         /// <summary>
         /// ファイル名テキストボックスにアイテムをドロップした時の処理
@@ -48,9 +54,9 @@ namespace LightPlayer
             var filePath = ( ( string[] )e.Data.GetData( DataFormats.FileDrop, false ) ).First();
 
             // 設定済みでないファイルの場合のみ設定
-            if ( !_model.Exists( filePath ) )
+            if ( !_playerModel.Exists( filePath ) )
             {
-                _model.SetFilePath( sender, filePath );
+                _playerModel.SetFilePath( sender, filePath );
             }
         }
 
@@ -70,10 +76,10 @@ namespace LightPlayer
         /// </summary>
         public void PlayButton_Click( object sender, EventArgs e )
         {
-            if ( _model.IsPlayable( sender ) )
+            if ( _playerModel.IsPlayable( sender ) )
             {
                 _view.SetControlsEnabled( false );
-                _model.Play( sender );
+                _playerModel.PlayBack( sender, _configModel.IsParallelPlayback );
             }
         }
 
@@ -83,7 +89,7 @@ namespace LightPlayer
         public void StopButton_Click( object sender, EventArgs e )
         {
             _view.SetControlsEnabled( true );
-            _model.Stop( sender );
+            _playerModel.Stop( sender, _configModel.IsParallelPlayback );
         }
 
         /// <summary>
@@ -91,7 +97,7 @@ namespace LightPlayer
         /// </summary>
         public void LoopCheckBox_CheckedChanged( object sender, EventArgs e )
         {
-            _model.SwitchLoopMode( sender );
+            _playerModel.SwitchLoopMode( sender );
         }
 
         /// <summary>
@@ -99,7 +105,7 @@ namespace LightPlayer
         /// </summary>
         public void ClearButton_Click( object sender, EventArgs e )
         {
-            _model.ClearSettings( sender );
+            _playerModel.ClearSettings( sender );
         }
 
         /// <summary>
@@ -107,7 +113,7 @@ namespace LightPlayer
         /// </summary>
         public void VolumeBar_Scroll( object sender, EventArgs e )
         {
-            _model.SetVolume( sender );
+            _playerModel.SetVolume( sender );
         }
 
         /// <summary>
@@ -115,21 +121,9 @@ namespace LightPlayer
         /// </summary>
         public void View_Load( object sender, EventArgs e )
         {
-            try
-            {
-                // 設定情報をメディアプレイヤーに読み込む
-                _model.LoadSettings();
-            }
-            catch ( FileNotFoundException )
-            {
-                // 初回起動時はXMLファイルが存在しないため新規作成する
-                _model.SaveSettings();
-            }
-            catch ( InvalidOperationException )
-            {
-                // 読み込み失敗時の処理
-                _model.SaveSettings();
-            }
+            // モデルを初期化する
+            _playerModel.StartProcess();
+            _configModel.StartProcess();
         }
 
         /// <summary>
@@ -137,25 +131,21 @@ namespace LightPlayer
         /// </summary>
         public void View_FormClosing( object sender, FormClosingEventArgs e )
         {
-            try
-            {
-                // メディアプレイヤーの設定情報を書き込む
-                _model.SaveSettings();
-            }
-            catch ( InvalidOperationException )
-            {
-                // 書き込み失敗時
-                MessageBox.Show( "設定上の保存に失敗しました。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error );
-            }
+            // モデルの終了処理を実行する
+            _playerModel.EndProcces();
+            _configModel.EndProcces();
         }
+
+        #endregion メディアプレイヤー
+
+        #region コンフィグレーション
 
         /// <summary>
         /// 常に手前に表示のチェックを変更した時の処理
         /// </summary>
         public void TopMostCheckBox_CheckedChanged( object sender, EventArgs e )
         {
-            // 常に手前に表示されるかを決めるboolを反転する
-            _view.TopMost = !_view.TopMost;
+            _configModel.SetTopMost( ( ( CheckBox )sender ).Checked );
         }
 
         /// <summary>
@@ -163,10 +153,18 @@ namespace LightPlayer
         /// </summary>
         public void TranslucentCheckBox_CheckedChanged( object sender, EventArgs e )
         {
-            // 不透明ならば半透明に、半透明ならば不透明にする
-            _view.Opacity = _view.Opacity >= OPACITY_FULL
-                                ? OPACITY_TRANSLUCENT
-                                : OPACITY_FULL;
+            _configModel.SetOpacity( ( ( CheckBox )sender ).Checked );
+        }
+
+        /// <summary>
+        /// 同時再生するのチェックを変更した時の処理
+        /// </summary>
+        public void ParallelPlayBackCheckBox_CheckedChanged( object sender, EventArgs e )
+        {
+            _configModel.SetParallelPlayBack( ( ( CheckBox )sender ).Checked );
+
+            // 変更時はのメディアプレーヤーを停止させる
+            _playerModel.StopAll();
         }
 
         /// <summary>
@@ -174,8 +172,10 @@ namespace LightPlayer
         /// </summary>
         public void ClearAllButton_Click( object sender, EventArgs e )
         {
-            _model.ClearAllSettings();
+            _playerModel.ClearAllSettings();
         }
+
+        #endregion コンフィグレーション
 
         #endregion 公開メソッド（コントロールのイベント）
     }

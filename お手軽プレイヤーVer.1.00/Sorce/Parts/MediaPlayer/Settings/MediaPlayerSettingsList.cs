@@ -8,7 +8,7 @@ namespace LightPlayer
     /// メディアプレイヤー（全部）の保存情報クラス
     /// </summary>
 
-    [System.Xml.Serialization.XmlRoot( "settingsList" )]
+    [System.Xml.Serialization.XmlRoot( "mediaPlyaers" )]
     public class MediaPlayerSettingsList : IEnumerable<MediaPlayerSettings>
     {
         #region コンストラクタ
@@ -28,7 +28,7 @@ namespace LightPlayer
         /// <summary>
         /// メディアプレイヤー（全部）の保存情報リスト
         /// </summary>
-        [System.Xml.Serialization.XmlElement( "settings" )]
+        [System.Xml.Serialization.XmlElement( "mediaPlyaer" )]
         public List<MediaPlayerSettings> SettingsList { get; set; }
 
         #endregion プロパティ

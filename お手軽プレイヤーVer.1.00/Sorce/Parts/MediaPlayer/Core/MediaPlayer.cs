@@ -46,8 +46,7 @@ namespace LightPlayer
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="id"></param>
-        public MediaPlayer( int id )
+        public MediaPlayer( int id, View view ) // #よくない設計_Viewを参照している
         {
             InitializeComponent();
 
@@ -61,7 +60,8 @@ namespace LightPlayer
             VolumeBar.Name += $"_{ id.ToString() }";
             Player = new WmpWrapper();
 
-            _state = new MediaPlayerState( this );
+            // #よくない設計_Viewを参照している
+            _state = new MediaPlayerState( this, view.Invoke );
         }
 
         #endregion コンストラクタ
@@ -168,16 +168,47 @@ namespace LightPlayer
         /// <summary>
         /// 音量を設定する
         /// </summary>
-        /// <param name="volume"></param>
         public void SetVolume( int volume )
             => Player.Volume = VolumeBar.Value = volume;
 
         /// <summary>
         /// 状態を設定する
         /// </summary>
-        /// <param name="state"></param>
         public void SetSate( MediaPlayerStateEnum state )
             => _state.SetState( state );
+
+        /// <summary>
+        /// 状態を取得する
+        /// </summary>
+        public MediaPlayerStateEnum GetState()
+            => _state.GetState();
+
+        #region Objectクラスのオーバーライド
+
+        /// <summary>
+        /// 2つのオブジェクトが等価か判定する
+        /// </summary>
+        public override bool Equals( object obj )
+        {
+            if ( obj != null )
+            {
+                var other = obj as MediaPlayer;
+                if ( GetHashCode() == other.GetHashCode() )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// ハッシュコード値を取得する
+        /// </summary>
+        /// <returns></returns>
+        // #手抜き版_おいおいやる
+        public override int GetHashCode() => Id;    // IDは重複しないからたぶん大丈夫
+
+        #endregion Objectクラスのオーバーライド
 
         #endregion 公開メソッド
     }

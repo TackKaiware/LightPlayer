@@ -58,20 +58,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sorce\MediaPlayer\MediaPlayer.cs">
+    <Compile Include="DataBrigde.cs" />
+    <Compile Include="Sorce\Parts\Configuration\Core\ConfigurationControls.cs" />
+    <Compile Include="Sorce\Parts\Configuration\Settings\ConfigurationSettingsBridge.cs" />
+    <Compile Include="Sorce\Parts\Configuration\Settings\ConfigurationSettings.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaPlayer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Sorce\MediaPlayer\MediaPlayer.Designer.cs">
+    <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaPlayer.Designer.cs">
       <DependentUpon>MediaPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Sorce\Control\Controller.cs" />
-    <Compile Include="Sorce\MediaPlayer\MediaPlayerUtility.cs" />
-    <Compile Include="Sorce\MediaPlayer\MediaPlayerState.cs" />
-    <Compile Include="Sorce\MediaPlayer\MediaPlayerStateEnum.cs" />
-    <Compile Include="Sorce\MediaPlayer\MediaPlayerSettings.cs" />
-    <Compile Include="Sorce\MediaPlayer\MediaPlayerSettingsList.cs" />
-    <Compile Include="Sorce\MediaPlayer\WmpWrapper.cs" />
-    <Compile Include="Sorce\Model\Model.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaPlayerUtility.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\State\MediaPlayerState.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\State\MediaPlayerStateEnum.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\Settings\MediaPlayerSettings.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\Settings\MediaPlayerSettingsList.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\Core\WmpWrapper.cs" />
+    <Compile Include="Sorce\Model\ConfigurationModel.cs" />
+    <Compile Include="Sorce\Model\MediaPlayerModel.cs" />
     <Compile Include="Sorce\View\View.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,7 +86,7 @@
     <Compile Include="Sorce\Application\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sorce\Model\XmlAccesser.cs" />
-    <EmbeddedResource Include="Sorce\MediaPlayer\MediaPlayer.resx">
+    <EmbeddedResource Include="Sorce\Parts\MediaPlayer\Core\MediaPlayer.resx">
       <DependentUpon>MediaPlayer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -136,6 +141,7 @@
   <ItemGroup>
     <Content Include="icon-48.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

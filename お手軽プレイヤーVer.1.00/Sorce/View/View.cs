@@ -9,6 +9,7 @@ namespace LightPlayer
     public partial class View : Form
     {
         #region 定数
+
         /// <summary>
         /// 不透明度（100%）
         /// </summary>
@@ -18,6 +19,7 @@ namespace LightPlayer
         /// 不透明度(半透明)
         /// </summary>
         public const double OPACITY_TRANSLUCENT = 0.7;
+
         #endregion 定数
 
         #region プロパティ
@@ -26,6 +28,11 @@ namespace LightPlayer
         /// メディアプレイヤーのリスト
         /// </summary>
         public List<MediaPlayer> MediaPlayers { get; }
+
+        /// <summary>
+        /// コンフィグレーションにより変更可能なコントロール群
+        /// </summary>
+        public ConfigurationControls ConfigControls { get; }
 
         #endregion プロパティ
 
@@ -41,10 +48,19 @@ namespace LightPlayer
             // メディアプレイヤーのリストを生成
             MediaPlayers = new List<MediaPlayer>();
             for ( var id = 0; id < tableLayoutPanel1.RowCount; id++ )
-                MediaPlayers.Add( new MediaPlayer( id ) );
+
+                // #よくない設計_Viewを参照している
+                MediaPlayers.Add( new MediaPlayer( id, this ) );
 
             // 画面に追加
             tableLayoutPanel1.Controls.AddRange( MediaPlayers.ToArray() );
+
+            // コンフィグレーションにより変更可能なコントロール群を設定
+            ConfigControls = new ConfigurationControls(
+                this,
+                checkBox_TopMost,
+                checkBox_Opacity,
+                checkBox_ParallelPlayBack );
         }
 
         #endregion コンストラクタ
@@ -62,8 +78,15 @@ namespace LightPlayer
             FormClosing += controller.View_FormClosing;
 
             // フォーム上のコントローラーの設定
-            checkBox_TopMost.CheckedChanged += controller.TopMostCheckBox_CheckedChanged;
-            checkBox_Translucent.CheckedChanged += controller.TranslucentCheckBox_CheckedChanged;
+            checkBox_TopMost.CheckedChanged +=
+                controller.TopMostCheckBox_CheckedChanged;
+
+            checkBox_Opacity.CheckedChanged +=
+                controller.TranslucentCheckBox_CheckedChanged;
+
+            checkBox_ParallelPlayBack.CheckedChanged +=
+                controller.ParallelPlayBackCheckBox_CheckedChanged;
+
             button_ClearAll.Click += controller.ClearAllButton_Click;
 
             // メディアプレイヤーの設定
@@ -88,7 +111,7 @@ namespace LightPlayer
         {
             // これらは常にtrue固定
             checkBox_TopMost.Enabled = true;
-            checkBox_Translucent.Enabled = true;
+            checkBox_Opacity.Enabled = true;
 
             // 可変
             button_ClearAll.Enabled = enabled;
