@@ -8,6 +8,8 @@ namespace LightPlayer
 {
     public partial class MediaPlayer : UserControl
     {
+        private MediaPlayerState _state;
+
         #region 定数
         public static readonly Color COLOR_FILENAME_TEXTBOX_PLAYING = Color.GreenYellow;
         public static readonly Color COLOR_FILENAME_TEXTBOX_STOP = Color.Silver;
@@ -27,6 +29,8 @@ namespace LightPlayer
             ClearButton.Name += $"_{ id.ToString() }";
             VolumeBar.Name += $"_{ id.ToString() }";
             Player = new WmpWrapper();
+
+            _state = new MediaPlayerState( this );
         }
 
         private MediaPlayer()
@@ -45,7 +49,6 @@ namespace LightPlayer
         public Button ClearButton => button_Clear;
         public TrackBar VolumeBar => trackBar_VolumeBar;
         public WmpWrapper Player { get; }
-        private MediaPlayerState State { get; }
         #endregion プロパティ
 
         #region 公開メソッド
@@ -94,7 +97,7 @@ namespace LightPlayer
             => Player.Volume = VolumeBar.Value = volume;
 
         public void SetSate( MediaPlayerStateEnum state )
-            => State.SetState( Id, state );
+            => _state.SetState( state );
 
         #endregion 公開メソッド
     }

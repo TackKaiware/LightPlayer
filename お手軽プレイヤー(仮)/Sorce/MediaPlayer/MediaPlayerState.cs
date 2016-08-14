@@ -1,51 +1,38 @@
-﻿using System.Collections.Generic;
-
-using static LightPlayer.MediaPlayer;
-
-namespace LightPlayer
+﻿namespace LightPlayer
 {
+    using static MediaPlayer;
+
     public class MediaPlayerState
     {
-        readonly List<MediaPlayer> _mediaPlayers;
+        private MediaPlayer _mediaPlayer;
 
-        public MediaPlayerState( List<MediaPlayer> mediaPlayers )
+        public MediaPlayerState( MediaPlayer mediaPlayer )
         {
-            _mediaPlayers = mediaPlayers;
+            _mediaPlayer = mediaPlayer;
         }
 
-        public void SetState( int id, MediaPlayerStateEnum state )
+        public void SetState( MediaPlayerStateEnum state )
         {
             switch ( state )
             {
-                case MediaPlayerStateEnum.Stop:
-
-                    _mediaPlayers.ForEach( mp =>
-                    {
-                        mp.LoopCheckBox.Enabled = true;
-                        mp.ClearButton.Enabled = true;
-                    } );
-                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
-                    break;
-
-                case MediaPlayerStateEnum.StopFromPlaying:
-                    _mediaPlayers.ForEach( mp =>
-                    {
-                        mp.LoopCheckBox.Enabled = false;
-                        mp.ClearButton.Enabled = false;
-                    } );
-
-                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                case MediaPlayerStateEnum.Stopped:
+                    _mediaPlayer.LoopCheckBox.Enabled = true;
+                    _mediaPlayer.ClearButton.Enabled = true;
+                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
                     break;
 
                 case MediaPlayerStateEnum.Playing:
-
-                    _mediaPlayers.ForEach( x =>
-                    {
-                        x.LoopCheckBox.Enabled = false;
-                        x.ClearButton.Enabled = false;
-                    } );
-                    _mediaPlayers[id].FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_PLAYING;
+                    _mediaPlayer.LoopCheckBox.Enabled = false;
+                    _mediaPlayer.ClearButton.Enabled = false;
+                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_PLAYING;
                     break;
+
+                case MediaPlayerStateEnum.LockedByOtherPlaying:
+                    _mediaPlayer.LoopCheckBox.Enabled = false;
+                    _mediaPlayer.ClearButton.Enabled = false;
+                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                    break;
+
             }
         }
     }
