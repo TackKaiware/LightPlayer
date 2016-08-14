@@ -56,7 +56,6 @@
             // panel_ControlsGroup
             // 
             this.panel_ControlsGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel_ControlsGroup.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel_ControlsGroup.Controls.Add(this.trackBar_VolumeBar);
             this.panel_ControlsGroup.Controls.Add(this.button_Clear);
             this.panel_ControlsGroup.Controls.Add(this.checkBox_Loop);
@@ -65,17 +64,17 @@
             this.panel_ControlsGroup.Controls.Add(this.textBox_FileName);
             this.panel_ControlsGroup.Location = new System.Drawing.Point(3, 3);
             this.panel_ControlsGroup.Name = "panel_ControlsGroup";
-            this.panel_ControlsGroup.Size = new System.Drawing.Size(543, 38);
+            this.panel_ControlsGroup.Size = new System.Drawing.Size(451, 30);
             this.panel_ControlsGroup.TabIndex = 1;
             // 
             // trackBar_VolumeBar
             // 
             this.trackBar_VolumeBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.trackBar_VolumeBar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.trackBar_VolumeBar.Location = new System.Drawing.Point(395, 3);
+            this.trackBar_VolumeBar.Location = new System.Drawing.Point(345, 3);
             this.trackBar_VolumeBar.Maximum = 100;
             this.trackBar_VolumeBar.Name = "trackBar_VolumeBar";
-            this.trackBar_VolumeBar.Size = new System.Drawing.Size(141, 45);
+            this.trackBar_VolumeBar.Size = new System.Drawing.Size(99, 45);
             this.trackBar_VolumeBar.SmallChange = 5;
             this.trackBar_VolumeBar.TabIndex = 5;
             this.trackBar_VolumeBar.TickFrequency = 10;
@@ -87,11 +86,11 @@
             this.button_Clear.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.button_Clear.BackColor = System.Drawing.Color.Gainsboro;
             this.button_Clear.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button_Clear.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button_Clear.Font = new System.Drawing.Font("メイリオ", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.button_Clear.ForeColor = System.Drawing.Color.Blue;
-            this.button_Clear.Location = new System.Drawing.Point(335, 3);
+            this.button_Clear.Location = new System.Drawing.Point(295, 2);
             this.button_Clear.Name = "button_Clear";
-            this.button_Clear.Size = new System.Drawing.Size(54, 28);
+            this.button_Clear.Size = new System.Drawing.Size(44, 24);
             this.button_Clear.TabIndex = 4;
             this.button_Clear.Text = "クリア";
             this.button_Clear.UseVisualStyleBackColor = false;
@@ -100,10 +99,10 @@
             // 
             this.checkBox_Loop.AutoSize = true;
             this.checkBox_Loop.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkBox_Loop.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBox_Loop.Location = new System.Drawing.Point(275, 7);
+            this.checkBox_Loop.Font = new System.Drawing.Font("メイリオ", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.checkBox_Loop.Location = new System.Drawing.Point(236, 6);
             this.checkBox_Loop.Name = "checkBox_Loop";
-            this.checkBox_Loop.Size = new System.Drawing.Size(63, 22);
+            this.checkBox_Loop.Size = new System.Drawing.Size(53, 18);
             this.checkBox_Loop.TabIndex = 3;
             this.checkBox_Loop.Text = "ループ";
             this.checkBox_Loop.UseVisualStyleBackColor = true;
@@ -115,11 +114,11 @@
             this.button_Stop.BackColor = System.Drawing.Color.Black;
             this.button_Stop.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button_Stop.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button_Stop.Font = new System.Drawing.Font("Webdings", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.button_Stop.Font = new System.Drawing.Font("Webdings", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.button_Stop.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.button_Stop.Location = new System.Drawing.Point(238, 3);
+            this.button_Stop.Location = new System.Drawing.Point(204, 1);
             this.button_Stop.Name = "button_Stop";
-            this.button_Stop.Size = new System.Drawing.Size(31, 29);
+            this.button_Stop.Size = new System.Drawing.Size(26, 25);
             this.button_Stop.TabIndex = 2;
             this.button_Stop.Text = "<";
             this.button_Stop.UseVisualStyleBackColor = false;
@@ -131,11 +130,11 @@
             this.button_Play.BackColor = System.Drawing.Color.Black;
             this.button_Play.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button_Play.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button_Play.Font = new System.Drawing.Font("Webdings", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.button_Play.Font = new System.Drawing.Font("Webdings", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.button_Play.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.button_Play.Location = new System.Drawing.Point(201, 3);
+            this.button_Play.Location = new System.Drawing.Point(172, 1);
             this.button_Play.Name = "button_Play";
-            this.button_Play.Size = new System.Drawing.Size(31, 29);
+            this.button_Play.Size = new System.Drawing.Size(26, 25);
             this.button_Play.TabIndex = 1;
             this.button_Play.Text = "4";
             this.button_Play.UseVisualStyleBackColor = false;
@@ -146,12 +145,12 @@
             this.textBox_FileName.BackColor = System.Drawing.Color.Black;
             this.textBox_FileName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox_FileName.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.textBox_FileName.Font = new System.Drawing.Font("メイリオ", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBox_FileName.Font = new System.Drawing.Font("メイリオ", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.textBox_FileName.ForeColor = System.Drawing.Color.Silver;
-            this.textBox_FileName.Location = new System.Drawing.Point(3, 5);
+            this.textBox_FileName.Location = new System.Drawing.Point(3, 3);
             this.textBox_FileName.Name = "textBox_FileName";
             this.textBox_FileName.ReadOnly = true;
-            this.textBox_FileName.Size = new System.Drawing.Size(192, 24);
+            this.textBox_FileName.Size = new System.Drawing.Size(163, 21);
             this.textBox_FileName.TabIndex = 0;
             this.textBox_FileName.TabStop = false;
             // 
@@ -161,7 +160,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel_ControlsGroup);
             this.Name = "MediaPlayer";
-            this.Size = new System.Drawing.Size(548, 44);
+            this.Size = new System.Drawing.Size(458, 36);
             this.panel_ControlsGroup.ResumeLayout(false);
             this.panel_ControlsGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_VolumeBar)).EndInit();
