@@ -51,12 +51,23 @@ namespace LightPlayer
         /// </summary>
         public void FileNameTextBox_DragDrop( object sender, DragEventArgs e )
         {
-            var filePath = ( ( string[] )e.Data.GetData( DataFormats.FileDrop, false ) ).First();
+            var files = ( string[] )e.Data.GetData( DataFormats.FileDrop, false );
 
-            // 設定済みでないファイルの場合のみ設定
-            if ( !_playerModel.Exists( filePath ) )
+            // ファイルを1つD&Dした場合
+            if ( files.Length == 1 )
             {
-                _playerModel.SetFilePath( sender, filePath );
+                // 設定済みでないファイルの場合のみ設定
+                var file = files.First();
+                if ( !_playerModel.Exists( file ) )
+                    _playerModel.SetFilePath( sender, file );
+            }
+
+            // ファイルを2つ以上D&Dした場合
+            else
+            {
+                var id = sender.GetId();
+                for ( var index = 0; index < files.Length; index++, id++ )
+                    _playerModel.SetFilePath( id, files[index] );
             }
         }
 

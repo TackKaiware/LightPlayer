@@ -67,10 +67,27 @@ namespace LightPlayer
 
         #endregion コンストラクタ
 
+        #region プロパティ
+
+        /// <summary>
+        /// メディアプレイヤーの数
+        /// </summary>
+        public int PlayersCount => _mediaPlayers.Count;
+
+        #endregion プロパティ
+
         #region 公開メソッド
 
         /// <summary>
-        /// senderから取得したIDのプレイヤーにファイルパスを設定する
+        /// IDで指定したプレイヤーにファイルパスを設定する
+        /// </summary>
+        public void SetFilePath( int id, string filePath )
+        {
+            _mediaPlayers[id].SetFilePath( filePath );
+        }
+
+        /// <summary>
+        /// senderから取得したIDの再生する
         /// </summary>
         public void SetFilePath( object sender, string filePath )
         {
