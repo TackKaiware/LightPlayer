@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace LightPlayer
@@ -9,6 +8,18 @@ namespace LightPlayer
     /// </summary>
     public partial class View : Form
     {
+        #region 定数
+        /// <summary>
+        /// 不透明度（100%）
+        /// </summary>
+        public const double OPACITY_FULL = 1.0;
+
+        /// <summary>
+        /// 不透明度(半透明)
+        /// </summary>
+        public const double OPACITY_TRANSLUCENT = 0.7;
+        #endregion 定数
+
         #region プロパティ
 
         /// <summary>
@@ -30,13 +41,15 @@ namespace LightPlayer
             // メディアプレイヤーのリストを生成
             MediaPlayers = new List<MediaPlayer>();
             for ( var id = 0; id < tableLayoutPanel1.RowCount; id++ )
-            {
                 MediaPlayers.Add( new MediaPlayer( id ) );
-            }
 
             // 画面に追加
             tableLayoutPanel1.Controls.AddRange( MediaPlayers.ToArray() );
         }
+
+        #endregion コンストラクタ
+
+        #region 公開メソッド
 
         /// <summary>
         /// メディアプレイヤーの各コントールにイベントを割り当てる
@@ -44,29 +57,43 @@ namespace LightPlayer
         /// <param name="controller"></param>
         public void SetEventHandler( Controller controller )
         {
+            // フォームの設定
             Load += controller.View_Load;
             FormClosing += controller.View_FormClosing;
 
-            MediaPlayers.ForEach( mp => mp.SetEventHandler(
-                controller.FileNameTextBox_DragDrop,
-                controller.FileNameTextBox_DragEnter,
-                controller.PlayButton_Click,
-                controller.StopButton_Click,
-                controller.LoopCheckBox_CheckedChanged,
-                controller.ClearButton_Click,
-                controller.trackBar_VolumeBar_Scroll ) );
+            // フォーム上のコントローラーの設定
+            checkBox_TopMost.CheckedChanged += controller.TopMostCheckBox_CheckedChanged;
+            checkBox_Translucent.CheckedChanged += controller.TranslucentCheckBox_CheckedChanged;
+            button_ClearAll.Click += controller.ClearAllButton_Click;
+
+            // メディアプレイヤーの設定
+            foreach ( var mp in MediaPlayers )
+            {
+                mp.SetEventHandler(
+                    controller.FileNameTextBox_DragDrop,
+                    controller.FileNameTextBox_DragEnter,
+                    controller.PlayButton_Click,
+                    controller.StopButton_Click,
+                    controller.LoopCheckBox_CheckedChanged,
+                    controller.ClearButton_Click,
+                    controller.VolumeBar_Scroll );
+            }
         }
 
-        #endregion コンストラクタ
-
-        private void checkBox_TopMost_CheckedChanged( object sender, System.EventArgs e )
+        /// <summary>
+        /// フォーム上のコントロールの有効・無効を設定する
+        /// （メディアプレイヤーは対象外）
+        /// </summary>
+        public void SetControlsEnabled( bool enabled )
         {
-            TopMost = !TopMost;
+            // これらは常にtrue固定
+            checkBox_TopMost.Enabled = true;
+            checkBox_Translucent.Enabled = true;
+
+            // 可変
+            button_ClearAll.Enabled = enabled;
         }
 
-        private void checkBox_Translucent_CheckedChanged( object sender, System.EventArgs e )
-        {
-            Opacity = Opacity >= 1.0 ? 0.7 : 1.0; 
-        }
+        #endregion 公開メソッド
     }
 }

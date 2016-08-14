@@ -34,6 +34,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.checkBox_TopMost = new System.Windows.Forms.CheckBox();
             this.checkBox_Translucent = new System.Windows.Forms.CheckBox();
+            this.button_ClearAll = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -60,26 +61,40 @@
             // checkBox_TopMost
             // 
             this.checkBox_TopMost.AutoSize = true;
+            this.checkBox_TopMost.Cursor = System.Windows.Forms.Cursors.Hand;
             this.checkBox_TopMost.Font = new System.Drawing.Font("メイリオ", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBox_TopMost.Location = new System.Drawing.Point(266, 7);
+            this.checkBox_TopMost.Location = new System.Drawing.Point(186, 8);
             this.checkBox_TopMost.Name = "checkBox_TopMost";
             this.checkBox_TopMost.Size = new System.Drawing.Size(104, 21);
             this.checkBox_TopMost.TabIndex = 1;
             this.checkBox_TopMost.Text = "常に手前に表示";
             this.checkBox_TopMost.UseVisualStyleBackColor = true;
-            this.checkBox_TopMost.CheckedChanged += new System.EventHandler(this.checkBox_TopMost_CheckedChanged);
             // 
             // checkBox_Translucent
             // 
             this.checkBox_Translucent.AutoSize = true;
+            this.checkBox_Translucent.Cursor = System.Windows.Forms.Cursors.Hand;
             this.checkBox_Translucent.Font = new System.Drawing.Font("メイリオ", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBox_Translucent.Location = new System.Drawing.Point(376, 7);
+            this.checkBox_Translucent.Location = new System.Drawing.Point(296, 8);
             this.checkBox_Translucent.Name = "checkBox_Translucent";
             this.checkBox_Translucent.Size = new System.Drawing.Size(93, 21);
             this.checkBox_Translucent.TabIndex = 2;
             this.checkBox_Translucent.Text = "半透明にする";
             this.checkBox_Translucent.UseVisualStyleBackColor = true;
-            this.checkBox_Translucent.CheckedChanged += new System.EventHandler(this.checkBox_Translucent_CheckedChanged);
+            // 
+            // button_ClearAll
+            // 
+            this.button_ClearAll.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_ClearAll.BackColor = System.Drawing.Color.Gainsboro;
+            this.button_ClearAll.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button_ClearAll.Font = new System.Drawing.Font("メイリオ", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button_ClearAll.ForeColor = System.Drawing.Color.Red;
+            this.button_ClearAll.Location = new System.Drawing.Point(395, 6);
+            this.button_ClearAll.Name = "button_ClearAll";
+            this.button_ClearAll.Size = new System.Drawing.Size(75, 23);
+            this.button_ClearAll.TabIndex = 3;
+            this.button_ClearAll.Text = "ALLクリア";
+            this.button_ClearAll.UseVisualStyleBackColor = false;
             // 
             // View
             // 
@@ -87,6 +102,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(482, 439);
+            this.Controls.Add(this.button_ClearAll);
             this.Controls.Add(this.checkBox_Translucent);
             this.Controls.Add(this.checkBox_TopMost);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -104,5 +120,6 @@
 
         private System.Windows.Forms.CheckBox checkBox_TopMost;
         private System.Windows.Forms.CheckBox checkBox_Translucent;
+        private System.Windows.Forms.Button button_ClearAll;
     }
 }

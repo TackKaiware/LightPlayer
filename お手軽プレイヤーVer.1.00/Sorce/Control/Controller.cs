@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static LightPlayer.View;
 
 namespace LightPlayer
 {
@@ -11,8 +12,17 @@ namespace LightPlayer
     public class Controller
     {
         #region フィールド
+
+        /// <summary>
+        /// ビューへの参照
+        /// </summary>
         private View _view;
+
+        /// <summary>
+        /// モデルへの参照
+        /// </summary>
         private Model _model;
+
         #endregion フィールド
 
         #region コンストラクタ
@@ -36,7 +46,12 @@ namespace LightPlayer
         public void FileNameTextBox_DragDrop( object sender, DragEventArgs e )
         {
             var filePath = ( ( string[] )e.Data.GetData( DataFormats.FileDrop, false ) ).First();
-            _model.SetFilePath( sender, filePath );
+
+            // 設定済みでないファイルの場合のみ設定
+            if ( !_model.Exists( filePath ) )
+            {
+                _model.SetFilePath( sender, filePath );
+            }
         }
 
         /// <summary>
@@ -55,7 +70,11 @@ namespace LightPlayer
         /// </summary>
         public void PlayButton_Click( object sender, EventArgs e )
         {
-            _model.Play( sender );
+            if ( _model.IsPlayable( sender ) )
+            {
+                _view.SetControlsEnabled( false );
+                _model.Play( sender );
+            }
         }
 
         /// <summary>
@@ -63,6 +82,7 @@ namespace LightPlayer
         /// </summary>
         public void StopButton_Click( object sender, EventArgs e )
         {
+            _view.SetControlsEnabled( true );
             _model.Stop( sender );
         }
 
@@ -85,7 +105,7 @@ namespace LightPlayer
         /// <summary>
         /// 音量バーをスクロールした時の処理
         /// </summary>
-        public void trackBar_VolumeBar_Scroll( object sender, EventArgs e )
+        public void VolumeBar_Scroll( object sender, EventArgs e )
         {
             _model.SetVolume( sender );
         }
@@ -127,6 +147,34 @@ namespace LightPlayer
                 // 書き込み失敗時
                 MessageBox.Show( "設定上の保存に失敗しました。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
+        }
+
+        /// <summary>
+        /// 常に手前に表示のチェックを変更した時の処理
+        /// </summary>
+        public void TopMostCheckBox_CheckedChanged( object sender, EventArgs e )
+        {
+            // 常に手前に表示されるかを決めるboolを反転する
+            _view.TopMost = !_view.TopMost;
+        }
+
+        /// <summary>
+        /// 半透明にするのチェックを変更した時の処理
+        /// </summary>
+        public void TranslucentCheckBox_CheckedChanged( object sender, EventArgs e )
+        {
+            // 不透明ならば半透明に、半透明ならば不透明にする
+            _view.Opacity = _view.Opacity >= OPACITY_FULL
+                                ? OPACITY_TRANSLUCENT
+                                : OPACITY_FULL;
+        }
+
+        /// <summary>
+        /// ALLクリアーボタン押下時の処理
+        /// </summary>
+        public void ClearAllButton_Click( object sender, EventArgs e )
+        {
+            _model.ClearAllSettings();
         }
 
         #endregion 公開メソッド（コントロールのイベント）

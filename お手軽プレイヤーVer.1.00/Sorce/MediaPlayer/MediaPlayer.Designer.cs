@@ -71,7 +71,7 @@
             // 
             this.trackBar_VolumeBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.trackBar_VolumeBar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.trackBar_VolumeBar.Location = new System.Drawing.Point(345, 3);
+            this.trackBar_VolumeBar.Location = new System.Drawing.Point(295, 3);
             this.trackBar_VolumeBar.Maximum = 100;
             this.trackBar_VolumeBar.Name = "trackBar_VolumeBar";
             this.trackBar_VolumeBar.Size = new System.Drawing.Size(99, 45);
@@ -88,7 +88,7 @@
             this.button_Clear.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button_Clear.Font = new System.Drawing.Font("メイリオ", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.button_Clear.ForeColor = System.Drawing.Color.Blue;
-            this.button_Clear.Location = new System.Drawing.Point(295, 2);
+            this.button_Clear.Location = new System.Drawing.Point(400, 3);
             this.button_Clear.Name = "button_Clear";
             this.button_Clear.Size = new System.Drawing.Size(44, 24);
             this.button_Clear.TabIndex = 4;
@@ -131,7 +131,7 @@
             this.button_Play.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button_Play.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button_Play.Font = new System.Drawing.Font("Webdings", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.button_Play.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.button_Play.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.button_Play.Location = new System.Drawing.Point(172, 1);
             this.button_Play.Name = "button_Play";
             this.button_Play.Size = new System.Drawing.Size(26, 25);
@@ -142,11 +142,11 @@
             // textBox_FileName
             // 
             this.textBox_FileName.AllowDrop = true;
-            this.textBox_FileName.BackColor = System.Drawing.Color.Black;
+            this.textBox_FileName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(34)))), ((int)(((byte)(0)))));
             this.textBox_FileName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox_FileName.Cursor = System.Windows.Forms.Cursors.Hand;
             this.textBox_FileName.Font = new System.Drawing.Font("メイリオ", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox_FileName.ForeColor = System.Drawing.Color.Silver;
+            this.textBox_FileName.ForeColor = System.Drawing.Color.YellowGreen;
             this.textBox_FileName.Location = new System.Drawing.Point(3, 3);
             this.textBox_FileName.Name = "textBox_FileName";
             this.textBox_FileName.ReadOnly = true;

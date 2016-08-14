@@ -8,21 +8,52 @@ namespace LightPlayer
 {
     public partial class MediaPlayer : UserControl
     {
+        #region フィールド
+
+        /// <summary>
+        /// メディアプレイヤーの状態
+        /// </summary>
         private MediaPlayerState _state;
 
+        #endregion フィールド
+
         #region 定数
-        public static readonly Color COLOR_FILENAME_TEXTBOX_PLAYING = Color.GreenYellow;
-        public static readonly Color COLOR_FILENAME_TEXTBOX_STOP = Color.Silver;
+
+        /// <summary>
+        /// ファイル名テキストボックスの文字色（再生時）
+        /// </summary>
+        public static readonly Color COLOR_FILENAME_TEXTBOX_PLAYING = Color.Yellow;
+
+        /// <summary>
+        /// ファイル名テキストボックスの文字色（停止時）
+        /// </summary>
+        public static readonly Color COLOR_FILENAME_TEXTBOX_STOP = Color.YellowGreen;
+
+        /// <summary>
+        /// 対応ファイルの拡張子リスト
+        /// </summary>
         private static readonly List<string> AVAILABLE_FILE_TYPES = new List<string>{ ".wav", ".mp3", ".mid" };
+
+        /// <summary>
+        /// ファイルパスとして不正な文字のリスト
+        /// </summary>
         private static readonly List<char>INVALID_PATH_CHARS = new List<char>( Path.GetInvalidPathChars() );
+
         #endregion 定数
 
         #region コンストラクタ
 
-        public MediaPlayer( int id ) : this()
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="id"></param>
+        public MediaPlayer( int id )
         {
+            InitializeComponent();
+
             Id = id;
             FileNameTextBox.Name += $"_{ id.ToString() }";
+            FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
             PlayButton.Name += $"_{ id.ToString() }";
             StopButton.Name += $"_{ id.ToString() }";
             LoopCheckBox.Name += $"_{ id.ToString() }";
@@ -33,26 +64,57 @@ namespace LightPlayer
             _state = new MediaPlayerState( this );
         }
 
-        private MediaPlayer()
-        {
-            InitializeComponent();
-        }
-
         #endregion コンストラクタ
 
         #region プロパティ
+
+        /// <summary>
+        /// ID
+        /// </summary>
         public int Id { get; }
+
+        /// <summary>
+        /// ファイル名テキストボックス
+        /// </summary>
         public TextBox FileNameTextBox => textBox_FileName;
+
+        /// <summary>
+        /// 再生ボタン
+        /// </summary>
         public Button PlayButton => button_Play;
+
+        /// <summary>
+        /// 停止ボタン
+        /// </summary>
         public Button StopButton => button_Stop;
+
+        /// <summary>
+        /// ループモードチェックボックス
+        /// </summary>
         public CheckBox LoopCheckBox => checkBox_Loop;
+
+        /// <summary>
+        /// クリアボタン
+        /// </summary>
         public Button ClearButton => button_Clear;
+
+        /// <summary>
+        /// 音量バー
+        /// </summary>
         public TrackBar VolumeBar => trackBar_VolumeBar;
+
+        /// <summary>
+        /// Windowsメディアプレイヤーのラッパークラスオブジェクト
+        /// </summary>
         public WmpWrapper Player { get; }
+
         #endregion プロパティ
 
         #region 公開メソッド
 
+        /// <summary>
+        /// メディアプレイヤーの各コントロールにイベントハンドラーを設定する
+        /// </summary>
         public void SetEventHandler(
                     DragEventHandler fileNameTextBox_DragEnter,
                     DragEventHandler fileNameTextBox_DragDrop,
@@ -71,6 +133,10 @@ namespace LightPlayer
             VolumeBar.Scroll += volumeBar_Scroll;
         }
 
+        /// <summary>
+        /// 音楽ファイルのパスを設定する
+        /// </summary>
+        /// <param name="filePath"></param>
         public void SetFilePath( string filePath )
         {
             // 対応可能なファイルタイプの場合のみセットする
@@ -82,9 +148,15 @@ namespace LightPlayer
             }
         }
 
+        /// <summary>
+        /// ループモードを切り替える
+        /// </summary>
         public void SwitchLoopMode()
             => Player.LoopMode = !Player.LoopMode;
 
+        /// <summary>
+        /// 設定を初期化数する
+        /// </summary>
         public void ClearSettings()
         {
             VolumeBar.Value = WmpWrapper.INIT_VOLUME;
@@ -93,9 +165,17 @@ namespace LightPlayer
             FileNameTextBox.Text = Player.FileName;
         }
 
+        /// <summary>
+        /// 音量を設定する
+        /// </summary>
+        /// <param name="volume"></param>
         public void SetVolume( int volume )
             => Player.Volume = VolumeBar.Value = volume;
 
+        /// <summary>
+        /// 状態を設定する
+        /// </summary>
+        /// <param name="state"></param>
         public void SetSate( MediaPlayerStateEnum state )
             => _state.SetState( state );
 

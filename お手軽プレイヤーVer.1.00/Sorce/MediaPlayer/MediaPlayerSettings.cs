@@ -1,10 +1,12 @@
 ﻿namespace LightPlayer
 {
     /// <summary>
-    /// メディアプレイヤー（1つ分）の保存用情報
+    /// メディアプレイヤー（1つ分）の保存情報
     /// </summary>
     public class MediaPlayerSettings
     {
+        #region コンストラクタ
+
         /// <summary>
         /// XML読み書き用のデフォルトコンストラクタ
         /// </summary>
@@ -23,15 +25,29 @@
             Volume = volume;
         }
 
+        #endregion コンストラクタ
+
+        /// <summary>
+        /// ID
+        /// </summary>
         [System.Xml.Serialization.XmlElement( "id" )]
         public int Id { get; set; }
 
+        /// <summary>
+        /// ファイルパス
+        /// </summary>
         [System.Xml.Serialization.XmlElement( "filePath" )]
         public string FilePath { get; set; }
 
+        /// <summary>
+        /// ループモード
+        /// </summary>
         [System.Xml.Serialization.XmlElement( "loopMode" )]
         public bool LoopMode { get; set; }
 
+        /// <summary>
+        /// 音量
+        /// </summary>
         [System.Xml.Serialization.XmlElement( "volume" )]
         public int Volume { get; set; }
     }

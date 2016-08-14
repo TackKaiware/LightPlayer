@@ -5,6 +5,9 @@ using System.Windows.Forms;
 
 namespace LightPlayer
 {
+    /// <summary>
+    /// メディアプレイヤーに関連する便利メソッド群
+    /// </summary>
     public static class MediaPlayerUtility
     {
         /// <summary>
@@ -19,16 +22,14 @@ namespace LightPlayer
             }
             catch ( InvalidCastException )
             {
+                // メッセージを出力して強制終了
                 Console.WriteLine( "プログラムエラー：senderがControlクラスでない" );
-
-                // 強制終了
                 Environment.Exit( Environment.ExitCode );
             }
             catch ( FormatException )
             {
+                // メッセージを出力して強制終了
                 Console.WriteLine( "プログラムエラー：コントロールのNameの末尾が\"_2桁の数字\"でない" );
-
-                // 強制終了
                 Environment.Exit( Environment.ExitCode );
             }
 

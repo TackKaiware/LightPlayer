@@ -5,6 +5,9 @@ using System.Xml.Serialization;
 
 namespace LightPlayer
 {
+    /// <summary>
+    /// XMLファイル読み書きクラス
+    /// </summary>
     public static class XmlAccesser
     {
         /// <summary>
