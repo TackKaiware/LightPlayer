@@ -61,6 +61,7 @@ namespace LightPlayer
                 checkBox_TopMost,
                 checkBox_Opacity,
                 checkBox_ParallelPlayBack );
+            
         }
 
         #endregion コンストラクタ

@@ -141,6 +141,7 @@ namespace LightPlayer
             _controls.TopMostCheckBox.Checked = settings.IsTopMost;
             _controls.OpacityCheckBox.Checked = settings.IsOpacity;
             _controls.ParalledPlayBackCheckBox.Checked = settings.IsParallelPlayBack;
+            _controls.View.Location = settings.Location;
 
             // 読み込んだ設定情報をビューに反映する
             SetTopMost( settings.IsTopMost );
@@ -164,7 +165,8 @@ namespace LightPlayer
             var settings = new ConfigurationSettings(
                 _controls.View.TopMost,
                 _controls.View.Opacity == OPACITY_FULL ? false : true,
-                IsParallelPlayback );
+                IsParallelPlayback,
+                _controls.View.Location );
 
             // 設定情報をXMLファイルに書き込む
             // XmlAccesser.Write()から例外がスローされた場合は

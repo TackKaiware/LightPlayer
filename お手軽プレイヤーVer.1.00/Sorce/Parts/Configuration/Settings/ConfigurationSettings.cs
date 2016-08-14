@@ -1,4 +1,5 @@
-﻿namespace LightPlayer
+﻿using System.Drawing;
+namespace LightPlayer
 {
     /// <summary>
     /// プレイヤー設定の保存情報
@@ -18,11 +19,12 @@
         /// <summary>
         /// 保存情報生成用の引数有りコンストラクタ
         /// </summary>
-        public ConfigurationSettings( bool isTopMost, bool isOpacity, bool isParallelPlayBack )
+        public ConfigurationSettings( bool isTopMost, bool isOpacity, bool isParallelPlayBack, Point location )
         {
             IsTopMost = isTopMost;
             IsOpacity = isOpacity;
             IsParallelPlayBack = isParallelPlayBack;
+            Location = location;
         }
 
         #endregion コンストラクタ
@@ -46,6 +48,12 @@
         /// </summary>
         [System.Xml.Serialization.XmlElement( "isParallelPlayBack" )]
         public bool IsParallelPlayBack { get; set; }
+
+        /// <summary>
+        /// ウィンドウの位置
+        /// </summary>
+         [System.Xml.Serialization.XmlElement( "location" )]
+        public Point Location { get; set; }
 
         #endregion プロパティ
     }
