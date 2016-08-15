@@ -14,9 +14,9 @@ namespace LightPlayer
         #region フィールド
 
         /// <summary>
-        /// フォーム上のコントロールへの参照
+        /// 処理に必要なビューの情報
         /// </summary>
-        private ConfigurationControls _controls;
+        private ViewProvider _viewProvider;
 
         #endregion フィールド
 
@@ -25,8 +25,7 @@ namespace LightPlayer
         /// <summary>
         /// コンフィグレーション設定保存用XMLファイルのフルパス
         /// </summary>
-        private static readonly string SETTINGS_XML_PATH =
-                                       Environment.CurrentDirectory + @"\config.xml";
+        private static readonly string SETTINGS_XML_PATH = Environment.CurrentDirectory + @"\config.xml";
 
         #endregion 定数
 
@@ -37,12 +36,6 @@ namespace LightPlayer
         /// </summary>
         public bool IsParallelPlayback { get; private set; }
 
-        // #よくない設計_無駄にクラスを増やしている
-        /// <summary>
-        /// コンフィグレーション設定を橋渡しするオブジェクト
-        /// </summary>
-        public ConfigurationSettingsBridge SettingsBridge { get; }
-
         #endregion プロパティ
 
         #region コンストラクタ
@@ -50,12 +43,9 @@ namespace LightPlayer
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public ConfigurationModel( ConfigurationControls controls )
+        public ConfigurationModel( ViewProvider viewProvider )
         {
-            _controls = controls;
-
-            // #よくない設計_無駄にクラスを増やしている
-            SettingsBridge = new ConfigurationSettingsBridge( controls );
+            _viewProvider = viewProvider;
         }
 
         #endregion コンストラクタ
@@ -65,13 +55,12 @@ namespace LightPlayer
         /// <summary>
         /// 常に手前に表示するか否を設定する
         /// </summary>
-        public void SetTopMost( bool enabled ) => _controls.View.TopMost = enabled;
+        public void SetTopMost( bool enabled ) => _viewProvider.TopMost = enabled;
 
         /// <summary>
         /// 不透明度をを設定する
         /// </summary>
-        public void SetOpacity( bool enabled )
-            => _controls.View.Opacity = enabled ? OPACITY_TRANSLUCENT : OPACITY_FULL;
+        public void SetOpacity( bool enabled ) => _viewProvider.Opacity = enabled ? OPACITY_TRANSLUCENT : OPACITY_FULL;
 
         /// <summary>
         /// 同時再生するか否かを設定する
@@ -126,27 +115,27 @@ namespace LightPlayer
         /// </summary>
         private void LoadSettings()
         {
-            // 読み込むのXMLファイルの存在をチェックする
-            // 存在しない場合は例外をスローする
+            //- 読み込むのXMLファイルの存在をチェックする
+            //- 存在しない場合は例外をスローする
             if ( !File.Exists( SETTINGS_XML_PATH ) )
                 throw new FileNotFoundException();
 
-            // XMLファイルから設定情報を読み込む
-            // XmlAccesser.Read()から例外がスローされた場合は
-            // ここでcatchせずにそのままコルー元に伝播させる
+            //- XMLファイルから設定情報を読み込む
+            //- XmlAccesser.Read()から例外がスローされた場合は
+            //- ここでcatchせずにそのままコルー元に伝播させる
             var settings = ( ConfigurationSettings )XmlAccesser.Read(
                 SETTINGS_XML_PATH, typeof( ConfigurationSettings ) );
 
-            // 読み込んだ設定情報をコントロール群に反映する
-            _controls.TopMostCheckBox.Checked = settings.IsTopMost;
-            _controls.OpacityCheckBox.Checked = settings.IsOpacity;
-            _controls.ParalledPlayBackCheckBox.Checked = settings.IsParallelPlayBack;
-            _controls.View.Location = settings.Location;
+            //- 読み込んだ設定情報をコントロール群に反映する
+            _viewProvider.TopMostCheckBox.Checked = settings.TopMost;
+            _viewProvider.OpacityCheckBox.Checked = settings.Opacity;
+            _viewProvider.ParallelPlayBackCheckBox.Checked = settings.ParallelPlayBack;
+            _viewProvider.Location = settings.Location;
 
-            // 読み込んだ設定情報をビューに反映する
-            SetTopMost( settings.IsTopMost );
-            SetOpacity( settings.IsOpacity );
-            SetParallelPlayBack( settings.IsParallelPlayBack );
+            //- 読み込んだ設定情報をビューに反映する
+            SetTopMost( settings.TopMost );
+            SetOpacity( settings.Opacity );
+            SetParallelPlayBack( settings.ParallelPlayBack );
         }
 
         /// <summary>
@@ -154,28 +143,24 @@ namespace LightPlayer
         /// </summary>
         private void SaveSettings()
         {
-            // 書き込み先のXMLファイルの存在をチェックする
-            // 存在しない場合は新規作成する
+            //- 書き込み先のXMLファイルの存在をチェックする
+            //- 存在しない場合は新規作成する
             if ( !File.Exists( SETTINGS_XML_PATH ) )
                 using ( var stream = File.Create( SETTINGS_XML_PATH ) )
                 {
                 }
 
-            //if ( stream != null )
-            //    stream.Close();
-
-            // コンフィグレーション設定情報を生成する
+            //- コンフィグレーション設定情報を生成する
             var settings = new ConfigurationSettings(
-                _controls.View.TopMost,
-                _controls.View.Opacity == OPACITY_FULL ? false : true,
+                _viewProvider.TopMost,
+                _viewProvider.Opacity == OPACITY_FULL ? false : true,
                 IsParallelPlayback,
-                _controls.View.Location );
+                _viewProvider.Location );
 
-            // 設定情報をXMLファイルに書き込む
-            // XmlAccesser.Write()から例外がスローされた場合は
-            // ここでcatchせずにそのままコルー元に伝播させる
-            XmlAccesser.Write( SETTINGS_XML_PATH,
-                typeof( ConfigurationSettings ), settings );
+            //- 設定情報をXMLファイルに書き込む
+            //- XmlAccesser.Write()から例外がスローされた場合は
+            //- ここでcatchせずにそのままコルー元に伝播させる
+            XmlAccesser.Write( SETTINGS_XML_PATH, typeof( ConfigurationSettings ), settings );
         }
 
         #endregion 非公開メソッド

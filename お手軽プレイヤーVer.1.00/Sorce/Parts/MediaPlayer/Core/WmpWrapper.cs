@@ -59,10 +59,7 @@ namespace LightPlayer
         /// <summary>
         /// 音声ファイル名
         /// </summary>
-        public string FileName
-            => !_mediaPlayer.URL.Equals( string.Empty )
-                    ? new FileInfo( _mediaPlayer.URL ).Name
-                    : string.Empty;
+        public string FileName => !_mediaPlayer.URL.Equals( string.Empty ) ? new FileInfo( _mediaPlayer.URL ).Name : string.Empty;
 
         /// <summary>
         /// ループ再生するorしない
@@ -83,8 +80,7 @@ namespace LightPlayer
         /// <summary>
         /// 停止したか？
         /// </summary>
-        public bool IsStopped
-            => _mediaPlayer.playState.Equals( WMPPlayState.wmppsStopped );
+        public bool IsStopped => _mediaPlayer.playState.Equals( WMPPlayState.wmppsStopped );
 
         /// <summary>
         /// 音量

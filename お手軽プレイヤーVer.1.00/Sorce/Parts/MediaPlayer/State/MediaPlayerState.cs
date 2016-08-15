@@ -4,7 +4,7 @@
     using static MediaPlayer;
     using static MediaPlayerStateEnum;
 
-    public delegate object InvolkeWorker( Action action );
+    
 
     /// <summary>
     /// メディアプレイヤーの状態を表現するクラス

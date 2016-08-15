@@ -46,7 +46,7 @@ namespace LightPlayer
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public MediaPlayer( int id, View view ) // #よくない設計_Viewを参照している
+        public MediaPlayer( int id, InvolkeWorker invokeWorker )
         {
             InitializeComponent();
 
@@ -60,8 +60,7 @@ namespace LightPlayer
             VolumeBar.Name += $"_{ id.ToString() }";
             Player = new WmpWrapper();
 
-            // #よくない設計_Viewを参照している
-            _state = new MediaPlayerState( this, view.Invoke );
+            _state = new MediaPlayerState( this, invokeWorker );
         }
 
         #endregion コンストラクタ
@@ -136,12 +135,10 @@ namespace LightPlayer
         /// <summary>
         /// 音楽ファイルのパスを設定する
         /// </summary>
-        /// <param name="filePath"></param>
         public void SetFilePath( string filePath )
         {
             // 対応可能なファイルタイプの場合のみセットする
-            var fileInfo = new FileInfo( filePath );
-            if ( AVAILABLE_FILE_TYPES.Contains( fileInfo.Extension.ToLower() ) )
+            if ( AVAILABLE_FILE_TYPES.Contains( new FileInfo( filePath ).Extension.ToLower() ) )
             {
                 Player.FilePath = filePath;
                 FileNameTextBox.Text = Player.FileName;
@@ -151,8 +148,7 @@ namespace LightPlayer
         /// <summary>
         /// ループモードを切り替える
         /// </summary>
-        public void SwitchLoopMode()
-            => Player.LoopMode = !Player.LoopMode;
+        public void SwitchLoopMode() => Player.LoopMode = !Player.LoopMode;
 
         /// <summary>
         /// 設定を初期化数する
@@ -168,20 +164,17 @@ namespace LightPlayer
         /// <summary>
         /// 音量を設定する
         /// </summary>
-        public void SetVolume( int volume )
-            => Player.Volume = VolumeBar.Value = volume;
+        public void SetVolume( int volume ) => Player.Volume = VolumeBar.Value = volume;
 
         /// <summary>
         /// 状態を設定する
         /// </summary>
-        public void SetSate( MediaPlayerStateEnum state )
-            => _state.SetState( state );
+        public void SetSate( MediaPlayerStateEnum state ) => _state.SetState( state );
 
         /// <summary>
         /// 状態を取得する
         /// </summary>
-        public MediaPlayerStateEnum GetState()
-            => _state.GetState();
+        public MediaPlayerStateEnum GetState() => _state.GetState();
 
         #region Objectクラスのオーバーライド
 

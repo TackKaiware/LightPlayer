@@ -8,6 +8,15 @@ namespace LightPlayer
     /// </summary>
     public partial class View : Form
     {
+        #region フィールド
+
+        /// <summary>
+        /// メディアプレイヤーのリスト
+        /// </summary>
+        private List<MediaPlayer> _mediaPlayers;
+
+        #endregion フィールド
+
         #region 定数
 
         /// <summary>
@@ -22,20 +31,6 @@ namespace LightPlayer
 
         #endregion 定数
 
-        #region プロパティ
-
-        /// <summary>
-        /// メディアプレイヤーのリスト
-        /// </summary>
-        public List<MediaPlayer> MediaPlayers { get; }
-
-        /// <summary>
-        /// コンフィグレーションにより変更可能なコントロール群
-        /// </summary>
-        public ConfigurationControls ConfigControls { get; }
-
-        #endregion プロパティ
-
         #region コンストラクタ
 
         /// <summary>
@@ -46,21 +41,12 @@ namespace LightPlayer
             InitializeComponent();
 
             // メディアプレイヤーのリストを生成
-            MediaPlayers = new List<MediaPlayer>();
+            _mediaPlayers = new List<MediaPlayer>();
             for ( var id = 0; id < tableLayoutPanel1.RowCount; id++ )
-
-                // #よくない設計_Viewを参照している
-                MediaPlayers.Add( new MediaPlayer( id, this ) );
+                _mediaPlayers.Add( new MediaPlayer( id, Invoke ) );
 
             // 画面に追加
-            tableLayoutPanel1.Controls.AddRange( MediaPlayers.ToArray() );
-
-            // コンフィグレーションにより変更可能なコントロール群を設定
-            ConfigControls = new ConfigurationControls(
-                this,
-                checkBox_TopMost,
-                checkBox_Opacity,
-                checkBox_ParallelPlayBack );
+            tableLayoutPanel1.Controls.AddRange( _mediaPlayers.ToArray() );
         }
 
         #endregion コンストラクタ
@@ -71,31 +57,38 @@ namespace LightPlayer
         /// メディアプレイヤーの各コントールにイベントを割り当てる
         /// </summary>
         /// <param name="controller"></param>
-        public void SetEventHandler( Controller controller )
+        public void SetEventHandler( MediaPlayerController playerCont, ConfigurationController congifCont )
         {
-            // フォームの設定
-            Load += controller.View_Load;
-            FormClosing += controller.View_FormClosing;
+            // コンフィグレーションコントローラのイベントハンドラを設定
+            Load += congifCont.View_Load;
+            FormClosing += congifCont.View_FormClosing;
+            checkBox_TopMost.CheckedChanged += congifCont.TopMostCheckBox_CheckedChanged;
+            checkBox_Opacity.CheckedChanged += congifCont.TranslucentCheckBox_CheckedChanged;
+            checkBox_ParallelPlayBack.CheckedChanged += congifCont.ParallelPlayBackCheckBox_CheckedChanged;
 
-            // フォーム上のコントローラーの設定
-            checkBox_TopMost.CheckedChanged += controller.TopMostCheckBox_CheckedChanged;
-            checkBox_Opacity.CheckedChanged += controller.TranslucentCheckBox_CheckedChanged;
-            checkBox_ParallelPlayBack.CheckedChanged += controller.ParallelPlayBackCheckBox_CheckedChanged;
-            button_ClearAll.Click += controller.ClearAllButton_Click;
-
-            // メディアプレイヤーの設定
-            foreach ( var mp in MediaPlayers )
+            // メディアプレイヤーコントローラのイベントハンドラを設定
+            Load += playerCont.View_Load;
+            FormClosing += playerCont.View_FormClosing;
+            button_ClearAll.Click += playerCont.ClearAllButton_Click;
+            foreach ( var mp in _mediaPlayers )
             {
                 mp.SetEventHandler(
-                    controller.FileNameTextBox_DragDrop,
-                    controller.FileNameTextBox_DragEnter,
-                    controller.PlayButton_Click,
-                    controller.StopButton_Click,
-                    controller.LoopCheckBox_CheckedChanged,
-                    controller.ClearButton_Click,
-                    controller.VolumeBar_Scroll );
+                    playerCont.FileNameTextBox_DragDrop,
+                    playerCont.FileNameTextBox_DragEnter,
+                    playerCont.PlayButton_Click,
+                    playerCont.StopButton_Click,
+                    playerCont.LoopCheckBox_CheckedChanged,
+                    playerCont.ClearButton_Click,
+                    playerCont.VolumeBar_Scroll );
             }
         }
+
+        /// <summary>
+        /// 他のモデルクラスが操作する情報を提供する
+        /// </summary>
+        /// <returns></returns>
+        public ViewProvider Provide()
+            => new ViewProvider( this, checkBox_TopMost, checkBox_Opacity, checkBox_ParallelPlayBack, _mediaPlayers );
 
         #endregion 公開メソッド
     }

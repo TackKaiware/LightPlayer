@@ -20,11 +20,11 @@ namespace LightPlayer
         /// <summary>
         /// 保存情報生成用の引数有りコンストラクタ
         /// </summary>
-        public ConfigurationSettings( bool isTopMost, bool isOpacity, bool isParallelPlayBack, Point location )
+        public ConfigurationSettings( bool topMost, bool opacity, bool parallelPlayBack, Point location )
         {
-            IsTopMost = isTopMost;
-            IsOpacity = isOpacity;
-            IsParallelPlayBack = isParallelPlayBack;
+            TopMost = topMost;
+            Opacity = opacity;
+            ParallelPlayBack = parallelPlayBack;
             Location = location;
         }
 
@@ -36,19 +36,19 @@ namespace LightPlayer
         /// 常に手前に表示するか
         /// </summary>
         [System.Xml.Serialization.XmlElement( "isTopMost" )]
-        public bool IsTopMost { get; set; }
+        public bool TopMost { get; set; }
 
         /// <summary>
         /// 不透明度
         /// </summary>
-        [System.Xml.Serialization.XmlElement( "isOpacity" )]
-        public bool IsOpacity { get; set; }
+        [System.Xml.Serialization.XmlElement( "opacity" )]
+        public bool Opacity { get; set; }
 
         /// <summary>
         /// 同時再生するか
         /// </summary>
-        [System.Xml.Serialization.XmlElement( "isParallelPlayBack" )]
-        public bool IsParallelPlayBack { get; set; }
+        [System.Xml.Serialization.XmlElement( "parallelPlayBack" )]
+        public bool ParallelPlayBack { get; set; }
 
         /// <summary>
         /// ウィンドウの位置

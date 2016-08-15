@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "お手軽プレイヤー(仮)", "お手軽プレイヤー(仮)\お手軽プレイヤー(仮).csproj", "{393C1010-9754-464B-8815-36FD10513E56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "お手軽プレイヤーVer.1.00", "お手軽プレイヤーVer.1.00\お手軽プレイヤーVer.1.00.csproj", "{53ECE68D-6BDC-4810-AF82-9AC43383DD0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "お手軽プレイヤーVer.1.01", "お手軽プレイヤーVer.1.00\お手軽プレイヤーVer.1.01.csproj", "{53ECE68D-6BDC-4810-AF82-9AC43383DD0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

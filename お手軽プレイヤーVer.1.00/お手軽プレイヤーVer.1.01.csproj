@@ -8,11 +8,26 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LightPlayer</RootNamespace>
-    <AssemblyName>お手軽プレイヤーVer.1.00</AssemblyName>
+    <AssemblyName>お手軽プレイヤーVer.1.01</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -44,6 +59,12 @@
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,8 +79,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sorce\Parts\Configuration\Core\ConfigurationControls.cs" />
-    <Compile Include="Sorce\Parts\Configuration\Settings\ConfigurationSettingsBridge.cs" />
+    <Compile Include="Sorce\Control\ConfigurationController.cs" />
+    <Compile Include="Sorce\Control\IController.cs" />
+    <Compile Include="Sorce\Control\MediaPlayerController.cs" />
+    <Compile Include="Sorce\Delegate\Delegates.cs" />
     <Compile Include="Sorce\Parts\Configuration\Settings\ConfigurationSettings.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaPlayer.cs">
       <SubType>UserControl</SubType>
@@ -67,7 +90,6 @@
     <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaPlayer.Designer.cs">
       <DependentUpon>MediaPlayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sorce\Control\Controller.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaPlayerLibrary.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\State\MediaPlayerState.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\State\MediaPlayerStateEnum.cs" />
@@ -85,6 +107,7 @@
     <Compile Include="Sorce\Application\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sorce\Model\XmlAccesser.cs" />
+    <Compile Include="Sorce\View\ViewProvider.cs" />
     <EmbeddedResource Include="Sorce\Parts\MediaPlayer\Core\MediaPlayer.resx">
       <DependentUpon>MediaPlayer.cs</DependentUpon>
     </EmbeddedResource>
@@ -140,7 +163,18 @@
   <ItemGroup>
     <Content Include="icon-48.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6 %28x86 および x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

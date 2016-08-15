@@ -15,7 +15,7 @@
         }
 
         /// <summary>
-        /// 保存情報生成用の引数有りコンストラクタ
+        /// 保存情報生成用の引数有りコンストラクタ-
         /// </summary>
         public MediaPlayerSettings( int id, string filePath, bool loopMode, int volume )
         {
