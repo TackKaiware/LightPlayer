@@ -61,7 +61,6 @@ namespace LightPlayer
                 checkBox_TopMost,
                 checkBox_Opacity,
                 checkBox_ParallelPlayBack );
-            
         }
 
         #endregion コンストラクタ
@@ -79,15 +78,9 @@ namespace LightPlayer
             FormClosing += controller.View_FormClosing;
 
             // フォーム上のコントローラーの設定
-            checkBox_TopMost.CheckedChanged +=
-                controller.TopMostCheckBox_CheckedChanged;
-
-            checkBox_Opacity.CheckedChanged +=
-                controller.TranslucentCheckBox_CheckedChanged;
-
-            checkBox_ParallelPlayBack.CheckedChanged +=
-                controller.ParallelPlayBackCheckBox_CheckedChanged;
-
+            checkBox_TopMost.CheckedChanged += controller.TopMostCheckBox_CheckedChanged;
+            checkBox_Opacity.CheckedChanged += controller.TranslucentCheckBox_CheckedChanged;
+            checkBox_ParallelPlayBack.CheckedChanged += controller.ParallelPlayBackCheckBox_CheckedChanged;
             button_ClearAll.Click += controller.ClearAllButton_Click;
 
             // メディアプレイヤーの設定
@@ -102,20 +95,6 @@ namespace LightPlayer
                     controller.ClearButton_Click,
                     controller.VolumeBar_Scroll );
             }
-        }
-
-        /// <summary>
-        /// フォーム上のコントロールの有効・無効を設定する
-        /// （メディアプレイヤーは対象外）
-        /// </summary>
-        public void SetControlsEnabled( bool enabled )
-        {
-            // これらは常にtrue固定
-            checkBox_TopMost.Enabled = true;
-            checkBox_Opacity.Enabled = true;
-
-            // 可変
-            button_ClearAll.Enabled = enabled;
         }
 
         #endregion 公開メソッド

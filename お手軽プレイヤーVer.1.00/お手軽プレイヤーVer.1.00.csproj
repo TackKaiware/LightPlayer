@@ -58,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataBrigde.cs" />
     <Compile Include="Sorce\Parts\Configuration\Core\ConfigurationControls.cs" />
     <Compile Include="Sorce\Parts\Configuration\Settings\ConfigurationSettingsBridge.cs" />
     <Compile Include="Sorce\Parts\Configuration\Settings\ConfigurationSettings.cs" />
@@ -69,7 +68,7 @@
       <DependentUpon>MediaPlayer.cs</DependentUpon>
     </Compile>
     <Compile Include="Sorce\Control\Controller.cs" />
-    <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaPlayerUtility.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaPlayerLibrary.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\State\MediaPlayerState.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\State\MediaPlayerStateEnum.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\Settings\MediaPlayerSettings.cs" />

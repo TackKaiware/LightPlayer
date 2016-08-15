@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+
 namespace LightPlayer
 {
     /// <summary>
@@ -52,7 +53,7 @@ namespace LightPlayer
         /// <summary>
         /// ウィンドウの位置
         /// </summary>
-         [System.Xml.Serialization.XmlElement( "location" )]
+        [System.Xml.Serialization.XmlElement( "location" )]
         public Point Location { get; set; }
 
         #endregion プロパティ
