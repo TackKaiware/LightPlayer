@@ -158,8 +158,11 @@ namespace LightPlayer
             // 存在しない場合は新規作成する
             if ( !File.Exists( SETTINGS_XML_PATH ) )
                 using ( var stream = File.Create( SETTINGS_XML_PATH ) )
-                    if ( stream != null )
-                        stream.Close();
+                {
+                }
+
+            //if ( stream != null )
+            //    stream.Close();
 
             // コンフィグレーション設定情報を生成する
             var settings = new ConfigurationSettings(

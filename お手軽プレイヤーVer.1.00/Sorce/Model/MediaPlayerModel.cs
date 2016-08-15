@@ -11,7 +11,7 @@ namespace LightPlayer
     /// <summary>
     /// メディアプレイヤーモデルクラス
     /// </summary>
-    public class MediaPlayerModel
+    public class MediaPlayerModel : IDisposable
     {
         #region フィールド
 
@@ -66,15 +66,6 @@ namespace LightPlayer
         }
 
         #endregion コンストラクタ
-
-        #region プロパティ
-
-        /// <summary>
-        /// メディアプレイヤーの数
-        /// </summary>
-        public int PlayersCount => _mediaPlayers.Count;
-
-        #endregion プロパティ
 
         #region 公開メソッド
 
@@ -258,15 +249,10 @@ namespace LightPlayer
             var played = new List<MediaPlayer>();
             Parallel.ForEach( _mediaPlayers, ( mp ) =>
             {
-                //lock ( _lockObj )
-                //{
-                // 再生が完了したプレイヤーを保存
                 if ( mp.GetState().Equals( Playing ) && mp.Player.IsStopped )
                 {
                     played.Add( mp );
                 }
-
-                //}
             } );
 
             // #よくない設計_無駄にクラスを増やしている
@@ -349,8 +335,11 @@ namespace LightPlayer
             // 存在しない場合は新規作成する
             if ( !File.Exists( SETTINGS_XML_PATH ) )
                 using ( var stream = File.Create( SETTINGS_XML_PATH ) )
-                    if ( stream != null )
-                        stream.Close();
+                {
+                }
+
+            //if ( stream != null )
+            //    stream.Close();
 
             // メディアプレイヤーの設定情報を生成・リストに追加する
             var settingsList = new MediaPlayerSettingsList();
@@ -371,5 +360,42 @@ namespace LightPlayer
         }
 
         #endregion 非公開メソッド
+
+        #region IDisposable Support
+        private bool disposedValue = false; // 重複する呼び出しを検出するには
+
+        // このコードは、破棄可能なパターンを正しく実装できるように追加されました。
+        public void Dispose()
+        {
+            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(bool disposing) に記述します。
+            Dispose( true );
+
+            // TODO: 上のファイナライザーがオーバーライドされる場合は、次の行のコメントを解除してください。
+            // GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose( bool disposing )
+        {
+            if ( !disposedValue )
+            {
+                if ( disposing )
+                {
+                    // TODO: マネージ状態を破棄します (マネージ オブジェクト)。
+                    ( ( IDisposable )_timer ).Dispose();
+                }
+
+                // TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下のファイナライザーをオーバーライドします。
+                // TODO: 大きなフィールドを null に設定します。
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: 上の Dispose(bool disposing) にアンマネージ リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします。
+        // ~MediaPlayerModel() {
+        //   // このコードを変更しないでください。クリーンアップ コードを上の Dispose(bool disposing) に記述します。
+        //   Dispose(false);
+        // }
+        #endregion IDisposable Support
     }
 }

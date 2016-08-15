@@ -43,18 +43,6 @@ namespace LightPlayer
             Clear();
         }
 
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public WmpWrapper( string filePath, bool loopMode, int volume )
-        {
-            FilePath = filePath;
-            LoopMode = loopMode;
-            Volume = volume;
-
-            _mediaPlayer.settings.autoStart = false;
-        }
-
         #endregion コンストラクタ
 
         #region プロパティ
