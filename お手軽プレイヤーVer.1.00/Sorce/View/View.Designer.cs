@@ -146,13 +146,13 @@
             this.groupBox_ViewConfig.Text = "表示の設定";
 
             //
-            // checkBox_Translucent
+            // checkBox_Opacity
             //
             this.checkBox_Opacity.AutoSize = true;
             this.checkBox_Opacity.Cursor = System.Windows.Forms.Cursors.Hand;
             this.checkBox_Opacity.Font = new System.Drawing.Font( "メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( ( byte )( 128 ) ) );
             this.checkBox_Opacity.Location = new System.Drawing.Point( 6, 50 );
-            this.checkBox_Opacity.Name = "checkBox_Translucent";
+            this.checkBox_Opacity.Name = "checkBox_Opacity";
             this.checkBox_Opacity.Size = new System.Drawing.Size( 99, 22 );
             this.checkBox_Opacity.TabIndex = 4;
             this.checkBox_Opacity.Text = "半透明にする";
@@ -212,13 +212,13 @@
             this.button_ClearAll.UseVisualStyleBackColor = false;
 
             //
-            // checkBox_IsParallelPlayBack
+            // checkBox_ParallelPlayBack
             //
             this.checkBox_ParallelPlayBack.AutoSize = true;
             this.checkBox_ParallelPlayBack.Cursor = System.Windows.Forms.Cursors.Hand;
             this.checkBox_ParallelPlayBack.Font = new System.Drawing.Font( "メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( ( byte )( 128 ) ) );
             this.checkBox_ParallelPlayBack.Location = new System.Drawing.Point( 6, 23 );
-            this.checkBox_ParallelPlayBack.Name = "checkBox_IsParallelPlayBack";
+            this.checkBox_ParallelPlayBack.Name = "checkBox_ParallelPlayBack";
             this.checkBox_ParallelPlayBack.Size = new System.Drawing.Size( 99, 22 );
             this.checkBox_ParallelPlayBack.TabIndex = 5;
             this.checkBox_ParallelPlayBack.Text = "同時再生する";

@@ -32,7 +32,7 @@ namespace LightPlayer
         /// <summary>
         /// 対応ファイルの拡張子リスト
         /// </summary>
-        private static readonly List<string> AVAILABLE_FILE_TYPES = new List<string>{ ".wav", ".mp3", ".mid" };
+        public static readonly List<string> AVAILABLE_FILE_TYPES = new List<string>{ ".wav", ".mp3", ".mid" };
 
         /// <summary>
         /// ファイルパスとして不正な文字のリスト

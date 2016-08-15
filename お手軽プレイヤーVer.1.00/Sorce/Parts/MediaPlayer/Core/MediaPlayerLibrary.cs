@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -40,12 +41,20 @@ namespace LightPlayer
         /// 再生中のメディアプレイヤーのIDを取得する
         /// 再生中のメディアプレイヤーが無い場合は、0を返す
         /// </summary>
-        /// <param name="mediaPlayers"></param>
-        /// <returns></returns>
         public static int GetPlayingId( this List<MediaPlayer> mediaPlayers )
         {
             var id = mediaPlayers.IndexOf( mediaPlayers.Find( mp => mp.Player.IsPlaying ) );
             return id > 0 ? id : 0;
+        }
+
+        /// <summary>
+        /// 指定されたパスに存在するファイルが
+        /// 対応可能な音声ファイルか？
+        /// </summary>
+        public static bool IsSoundFile( this string path )
+        {
+            var ext = new FileInfo( path ).Extension;
+            return MediaPlayer.AVAILABLE_FILE_TYPES.Exists( x => ext.Equals( x ) );
         }
     }
 }

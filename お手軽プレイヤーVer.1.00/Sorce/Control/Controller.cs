@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -51,23 +52,51 @@ namespace LightPlayer
         /// </summary>
         public void FileNameTextBox_DragDrop( object sender, DragEventArgs e )
         {
-            var files = ( string[] )e.Data.GetData( DataFormats.FileDrop, false );
+            // #改善の余地あり_コードが冗長
+            var paths = ( string[] )e.Data.GetData( DataFormats.FileDrop, false );
 
             // ファイルを1つD&Dした場合
-            if ( files.Length == 1 )
+            if ( paths.Length == 1 )
             {
-                // 設定済みでないファイルの場合のみ設定
-                var file = files.First();
-                if ( !_playerModel.Exists( file ) )
-                    _playerModel.SetFilePath( sender, file );
+                var path = paths.First();
+
+                // ファイルの場合
+                if ( File.Exists( path ) )
+                {
+                    // 設定済みでないファイルの場合のみ設定
+                    if ( !_playerModel.Exists( path ) )
+                        _playerModel.SetFilePath( sender, path );
+                }
+
+                // フォルダの場合
+                else if ( Directory.Exists( path ) )
+                {
+                    // メディアプレイヤーをすべて初期化する
+                    _playerModel.ClearAllSettings();
+
+                    // フォルダの内容から対応可能な音声ファイルのみ抽出
+                    // ※再帰的にサブフォルダの内容は取得しない
+                    var files = Directory.GetFiles( path )
+                                         .Where( x => x.IsSoundFile() )
+                                         .ToArray();
+
+                    for ( var i = 0; i < files.Length; i++ )
+                        _playerModel.SetFilePath( i, files[i] );
+                }
+
+                // 上記以外の場合
+                else
+                {
+                    // NOP
+                }
             }
 
             // ファイルを2つ以上D&Dした場合
             else
             {
                 var id = sender.GetId();
-                for ( var index = 0; index < files.Length; index++, id++ )
-                    _playerModel.SetFilePath( id, files[index] );
+                for ( var index = 0; index < paths.Length; index++, id++ )
+                    _playerModel.SetFilePath( id, paths[index] );
             }
         }
 
@@ -77,7 +106,7 @@ namespace LightPlayer
         public void FileNameTextBox_DragEnter( object sender, DragEventArgs e )
         {
             if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
-                e.Effect = DragDropEffects.Copy;
+                e.Effect = DragDropEffects.All;
             else
                 e.Effect = DragDropEffects.None;
         }
@@ -89,7 +118,6 @@ namespace LightPlayer
         {
             if ( _playerModel.IsPlayable( sender ) )
             {
-                _view.SetControlsEnabled( false );
                 _playerModel.PlayBack( sender, _configModel.IsParallelPlayback );
             }
         }
@@ -99,7 +127,6 @@ namespace LightPlayer
         /// </summary>
         public void StopButton_Click( object sender, EventArgs e )
         {
-            _view.SetControlsEnabled( true );
             _playerModel.Stop( sender, _configModel.IsParallelPlayback );
         }
 
