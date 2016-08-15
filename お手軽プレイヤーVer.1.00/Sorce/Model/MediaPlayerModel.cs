@@ -23,7 +23,7 @@ namespace LightPlayer
         /// <summary>
         /// このクラスで扱うビューの情報
         /// </summary>
-        private ViewProvider _viewProvider;
+        private ViewProvider _provider;
 
         /// <summary>
         /// プレイヤーが停止したか監視するメソッドのタイマー
@@ -49,7 +49,7 @@ namespace LightPlayer
         /// <param name="mediaPlayers"></param>
         public MediaPlayerModel( ViewProvider viewProvider )
         {
-            _viewProvider = viewProvider;
+            _provider = viewProvider;
 
             _timer = new System.Timers.Timer();
             _timer.Elapsed += ObservePlayers;
@@ -63,74 +63,68 @@ namespace LightPlayer
         /// <summary>
         /// IDで指定したプレイヤーにファイルパスを設定する
         /// </summary>
-        public void SetFilePath( int id, string filePath ) => _viewProvider.MediaPlayers[id].SetFilePath( filePath );
+        public void SetFilePath( int id, string filePath ) => _provider.MediaPlayers[id].SetFilePath( filePath );
 
         /// <summary>
-        /// senderから取得したIDの再生する
+        /// 指定したIDプレイヤーを再生する
         /// </summary>
-        public void SetFilePath( object sender, string filePath ) => SetFilePath( sender.GetId(), filePath );
-
-        /// <summary>
-        /// senderから取得したIDの再生する
-        /// </summary>
-        public void PlayBack( object sender, bool isParallelPlayBack = false )
+        public void PlayBack( int id, bool isParallelPlayBack = false )
         {
             // 同時再生しないときは再生中のメディアプレイヤーは停止させる
             if ( !isParallelPlayBack )
             {
-                var playingId = _viewProvider.MediaPlayers.GetPlayingId();
-                _viewProvider.MediaPlayers[playingId].Player.Stop();
+                var playingId = _provider.MediaPlayers.GetPlayingId();
+                _provider.MediaPlayers[playingId].Player.Stop();
             }
 
             // 指定したメディアプレイヤーを再生し、
             // メディアプレイヤーの外観を更新する
-            var id = sender.GetId();
-            _viewProvider.MediaPlayers[id].Player.PlayBack();
-            _viewProvider.MediaPlayers[id].SetSate( Playing );
+            _provider.MediaPlayers[id].Player.PlayBack();
+            _provider.MediaPlayers[id].SetSate( Playing );
 
             // メディアプレイヤーの外観を更新
-            foreach ( var mp in _viewProvider.MediaPlayers )
+            foreach ( var mp in _provider.MediaPlayers )
 
                 // 同時再生しないときは他のメディアプレイヤーをロック
-                if ( !isParallelPlayBack && !mp.Equals( _viewProvider.MediaPlayers[id] ) )
+                if ( !isParallelPlayBack && !mp.Equals( _provider.MediaPlayers[id] ) )
                     mp.SetSate( LockedByOtherPlaying );
         }
 
         /// <summary>
-        /// senderから取得したIDのプレイヤーを停止する
+        /// 指定したIDのプレイヤーを停止する
         /// </summary>
-        public void Stop( object sender, bool isParallelPlayBack = false ) => PrivateStop( sender.GetId(), isParallelPlayBack );
+        public void Stop( int id, bool isParallelPlayBack = false ) => PrivateStop( id, isParallelPlayBack );
 
         /// <summary>
-        /// senderから取得したIDのプレイヤーのループモードを設定する
+        /// 指定したIDのプレイヤーのループモードを設定する
         /// </summary>
-        public void SwitchLoopMode( object sender ) => _viewProvider.MediaPlayers[sender.GetId()].SwitchLoopMode();
+        public void SwitchLoopMode( int id ) => _provider.MediaPlayers[id].SwitchLoopMode();
 
         /// <summary>
-        /// senderから取得したIDのプレイヤーの設定を初期化する
+        /// 指定したIDのプレイヤーの設定を初期化する
         /// </summary>
-        public void ClearSettings( object sender ) => _viewProvider.MediaPlayers[sender.GetId()].ClearSettings();
+        public void ClearSettings( int id ) => _provider.MediaPlayers[id].ClearSettings();
 
         /// <summary>
-        /// senderから取得したIDのプレイヤー音量を設定する
+        /// 指定したIDのプレイヤー音量を設定する
         /// </summary>
-        public void SetVolume( object sender ) => _viewProvider.MediaPlayers[sender.GetId()].SetVolume( ( ( TrackBar )sender ).Value );
+        public void SetVolume( int id, int volume ) => _provider.MediaPlayers[id].SetVolume( volume );
 
         /// <summary>
         /// 全てのメディアプレイヤーを初期化する
         /// </summary>
-        public void ClearAllSettings() => _viewProvider.MediaPlayers.ForEach( mp => mp.ClearSettings() );
+        public void ClearAllSettings() => _provider.MediaPlayers.ForEach( mp => mp.ClearSettings() );
 
         /// <summary>
-        /// メディアプレイヤーが再生可能か？
+        /// 指定したIDのメディアプレイヤーが再生可能か？
         /// </summary>
-        public bool IsPlayable( object sender ) => !string.IsNullOrWhiteSpace( _viewProvider.MediaPlayers[sender.GetId()].Player.FilePath );
+        public bool IsPlayable( int id ) => !string.IsNullOrWhiteSpace( _provider.MediaPlayers[id].Player.FilePath );
 
 
         /// <summary>
         /// 指定さてたファイルが既に設定済みか
         /// </summary>
-        public bool Exists( string filePath ) => _viewProvider.MediaPlayers.Exists( mp => mp.Player.FilePath.Equals( filePath ) );
+        public bool Exists( string filePath ) => _provider.MediaPlayers.Exists( mp => mp.Player.FilePath.Equals( filePath ) );
 
 
         /// <summary>
@@ -192,21 +186,21 @@ namespace LightPlayer
         private void ObservePlayers( object sender, ElapsedEventArgs e )
         {
             var played = new List<MediaPlayer>();
-            Parallel.ForEach( _viewProvider.MediaPlayers, ( mp ) =>
+            Parallel.ForEach( _provider.MediaPlayers, ( mp ) =>
             {
                 if ( mp.GetState().Equals( Playing ) && mp.Player.IsStopped )
                     played.Add( mp );
             } );
 
             // 停止状態にする
-            played.ForEach( p => PrivateStop( p, _viewProvider.ParallelPlayBackCheckBox.Checked ) );
+            played.ForEach( p => PrivateStop( p, _provider.ParallelPlayBackCheckBox.Checked ) );
         }
 
         /// <summary>
         /// プレイヤーの停止
         /// 公開メソッドStop()からのコール用
         /// </summary>
-        private void PrivateStop( int id, bool isParallelPlayBack = false ) => PrivateStop( _viewProvider.MediaPlayers[id], isParallelPlayBack );
+        private void PrivateStop( int id, bool isParallelPlayBack = false ) => PrivateStop( _provider.MediaPlayers[id], isParallelPlayBack );
 
 
         /// <summary>
@@ -217,7 +211,7 @@ namespace LightPlayer
         {
             // 同時再生しない場合
             if ( !isParallelPlayBack )
-                _viewProvider.MediaPlayers.ForEach( mp => mp.SetSate( Stopped ) );
+                _provider.MediaPlayers.ForEach( mp => mp.SetSate( Stopped ) );
 
             // 同時再生する場合
             else
@@ -243,7 +237,7 @@ namespace LightPlayer
                 SETTINGS_XML_PATH, typeof( MediaPlayerSettingsList ) );
 
             //- 読み込んだ設定情報をメディアプレイヤーに反映する
-            _viewProvider.MediaPlayers.ForEach( mp =>
+            _provider.MediaPlayers.ForEach( mp =>
             {
                 var settings = settingsList.Find( s => s.Id == mp.Id );
 
@@ -271,7 +265,7 @@ namespace LightPlayer
 
             //- メディアプレイヤーの設定情報を生成・リストに追加する
             var settingsList = new MediaPlayerSettingsList();
-            _viewProvider.MediaPlayers.ForEach( mp =>
+            _provider.MediaPlayers.ForEach( mp =>
             {
                 settingsList.Add( new MediaPlayerSettings(
                     mp.Id,

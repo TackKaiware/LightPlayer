@@ -187,9 +187,7 @@ namespace LightPlayer
             {
                 var other = obj as MediaPlayer;
                 if ( GetHashCode() == other.GetHashCode() )
-                {
                     return true;
-                }
             }
             return false;
         }
@@ -198,8 +196,15 @@ namespace LightPlayer
         /// ハッシュコード値を取得する
         /// </summary>
         /// <returns></returns>
-        // #手抜き版_おいおいやる
-        public override int GetHashCode() => Id;    // IDは重複しないからたぶん大丈夫
+        public override int GetHashCode()
+            => Id.GetHashCode() ^
+               FileNameTextBox.GetHashCode() ^
+               PlayButton.GetHashCode() ^
+               StopButton.GetHashCode() ^
+               LoopCheckBox.GetHashCode() ^
+               ClearButton.GetHashCode() ^
+               VolumeBar.GetHashCode() ^
+               Player.GetHashCode();
 
         #endregion Objectクラスのオーバーライド
 

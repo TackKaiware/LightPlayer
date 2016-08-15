@@ -16,7 +16,7 @@ namespace LightPlayer
         /// <summary>
         /// 処理に必要なビューの情報
         /// </summary>
-        private ViewProvider _viewProvider;
+        private ViewProvider _provider;
 
         #endregion フィールド
 
@@ -29,23 +29,15 @@ namespace LightPlayer
 
         #endregion 定数
 
-        #region プロパティ
-
-        /// <summary>
-        /// 同時再生するか否か
-        /// </summary>
-        public bool IsParallelPlayback { get; private set; }
-
-        #endregion プロパティ
 
         #region コンストラクタ
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public ConfigurationModel( ViewProvider viewProvider )
+        public ConfigurationModel( ViewProvider provider )
         {
-            _viewProvider = viewProvider;
+            _provider = provider;
         }
 
         #endregion コンストラクタ
@@ -55,17 +47,17 @@ namespace LightPlayer
         /// <summary>
         /// 常に手前に表示するか否を設定する
         /// </summary>
-        public void SetTopMost( bool enabled ) => _viewProvider.TopMost = enabled;
+        public void SetTopMost( bool check ) => _provider.TopMost = check;
 
         /// <summary>
-        /// 不透明度をを設定する
+        /// 不透明度を設定する
         /// </summary>
-        public void SetOpacity( bool enabled ) => _viewProvider.Opacity = enabled ? OPACITY_TRANSLUCENT : OPACITY_FULL;
+        public void SetOpacity( bool check ) => _provider.Opacity = ( check ? OPACITY_TRANSLUCENT : OPACITY_FULL );
 
         /// <summary>
         /// 同時再生するか否かを設定する
         /// </summary>
-        public void SetParallelPlayBack( bool enabled ) => IsParallelPlayback = enabled;
+        public void SetParallelPlayBack( bool check ) => _provider.ParallelPlayBackCheckBox.Checked = check;
 
         /// <summary>
         /// 開始処理（ビューのフォームロード時に呼ぶこと）
@@ -126,16 +118,11 @@ namespace LightPlayer
             var settings = ( ConfigurationSettings )XmlAccesser.Read(
                 SETTINGS_XML_PATH, typeof( ConfigurationSettings ) );
 
-            //- 読み込んだ設定情報をコントロール群に反映する
-            _viewProvider.TopMostCheckBox.Checked = settings.TopMost;
-            _viewProvider.OpacityCheckBox.Checked = settings.Opacity;
-            _viewProvider.ParallelPlayBackCheckBox.Checked = settings.ParallelPlayBack;
-            _viewProvider.Location = settings.Location;
-
             //- 読み込んだ設定情報をビューに反映する
-            SetTopMost( settings.TopMost );
-            SetOpacity( settings.Opacity );
-            SetParallelPlayBack( settings.ParallelPlayBack );
+            _provider.TopMostCheckBox.Checked = settings.TopMost;
+            _provider.OpacityCheckBox.Checked = settings.Opacity;
+            _provider.ParallelPlayBackCheckBox.Checked = settings.ParallelPlayBack;
+            _provider.Location = settings.Location;
         }
 
         /// <summary>
@@ -152,10 +139,10 @@ namespace LightPlayer
 
             //- コンフィグレーション設定情報を生成する
             var settings = new ConfigurationSettings(
-                _viewProvider.TopMost,
-                _viewProvider.Opacity == OPACITY_FULL ? false : true,
-                IsParallelPlayback,
-                _viewProvider.Location );
+                _provider.TopMost,
+                _provider.Opacity == OPACITY_FULL ? false : true,
+                _provider.ParallelPlayBackCheckBox.Checked,
+                _provider.Location );
 
             //- 設定情報をXMLファイルに書き込む
             //- XmlAccesser.Write()から例外がスローされた場合は

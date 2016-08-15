@@ -130,6 +130,18 @@ namespace LightPlayer
             Volume = INIT_VOLUME;
         }
 
+        /// <summary>
+        /// ハッシュコード値いを取得する
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+            => FilePath.GetHashCode() ^
+               FileName.GetHashCode() ^
+               LoopMode.GetHashCode() ^
+               IsPlaying.GetHashCode() ^
+               IsStopped.GetHashCode() ^
+               Volume.GetHashCode();
+    
         #endregion 公開メソッド
     }
 }

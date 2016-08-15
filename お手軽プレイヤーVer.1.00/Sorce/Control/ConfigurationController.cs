@@ -13,7 +13,7 @@ namespace LightPlayer
         /// <summary>
         /// このクラスで扱うビューの情報
         /// </summary>
-        private ViewProvider _viewProvider;
+        private ViewProvider _provider;
 
         /// <summary>
         /// コンフィグレーションモデルへの実体
@@ -27,9 +27,9 @@ namespace LightPlayer
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public ConfigurationController( ViewProvider viewProvider, ConfigurationModel model )
+        public ConfigurationController( ViewProvider provider, ConfigurationModel model )
         {
-            _viewProvider = viewProvider;
+            _provider = provider;
             _model = model;
         }
 
@@ -42,34 +42,39 @@ namespace LightPlayer
         /// <summary>
         /// フォームを開く時の処理
         /// </summary>
-        public void View_Load( object sender, EventArgs e )
-            => _model.StartProcess();
+        public void View_Load( object sender, EventArgs e ) => _model.StartProcess();
 
         /// <summary>
         /// フォームを閉じる時の処理
         /// </summary>
-        public void View_FormClosing( object sender, FormClosingEventArgs e )
-            => _model.EndProcces();
+        public void View_FormClosing( object sender, FormClosingEventArgs e ) => _model.EndProcces();
 
         #endregion IControllerの実装
 
         /// <summary>
         /// 常に手前に表示のチェックを変更した時の処理
         /// </summary>
-        public void TopMostCheckBox_CheckedChanged( object sender, EventArgs e )
-            => _model.SetTopMost( ( ( CheckBox )sender ).Checked );
+        public void TopMostCheckBox_CheckedChanged( object sender, EventArgs e ) => _model.SetTopMost( ( ( CheckBox )sender ).Checked );
 
         /// <summary>
         /// 半透明にするのチェックを変更した時の処理
         /// </summary>
-        public void TranslucentCheckBox_CheckedChanged( object sender, EventArgs e )
-            => _model.SetOpacity( ( ( CheckBox )sender ).Checked );
+        public void TranslucentCheckBox_CheckedChanged( object sender, EventArgs e ) => _model.SetOpacity( ( ( CheckBox )sender ).Checked );
 
         /// <summary>
         /// 同時再生するのチェックを変更した時の処理
         /// </summary>
         public void ParallelPlayBackCheckBox_CheckedChanged( object sender, EventArgs e )
-            => _model.SetParallelPlayBack( ( ( CheckBox )sender ).Checked );
+        {
+            var checkBox = ( CheckBox )sender;
+
+            // SetParallelPlayBack()の中でこのチェックボックスのチェック状態を書き換えている。
+            // 無限呼び出しを回避するため、一時的にイベントハンドラを解除し、
+            // SetParallelPlayBack()完了後、再び割り当てている。
+            checkBox.CheckedChanged -= ParallelPlayBackCheckBox_CheckedChanged;
+            _model.SetParallelPlayBack( ( ( CheckBox )sender ).Checked );
+            checkBox.CheckedChanged += ParallelPlayBackCheckBox_CheckedChanged;
+        }
 
         #endregion イベントハンドラ
     }
