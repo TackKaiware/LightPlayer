@@ -1,10 +1,7 @@
 ﻿namespace LightPlayer
 {
-    using System;
-    using static MediaPlayer;
+    using static MediaControl;
     using static MediaPlayerStateEnum;
-
-    
 
     /// <summary>
     /// メディアプレイヤーの状態を表現するクラス
@@ -21,7 +18,7 @@
         /// <summary>
         /// メディアプレイヤーへの参照
         /// </summary>
-        private MediaPlayer _mediaPlayer;
+        private MediaControl _mediaControl;
 
         /// <summary>
         /// 現在の状態
@@ -37,10 +34,10 @@
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public MediaPlayerState( MediaPlayer mediaPlayer, InvolkeWorker invoke )
+        public MediaPlayerState( MediaControl mediaPlayer, InvolkeWorker invoke )
         {
             _invokeWorker = invoke;
-            _mediaPlayer = mediaPlayer;
+            _mediaControl = mediaPlayer;
             _currentState = Stopped;
         }
 
@@ -60,7 +57,7 @@
                 _currentState = state;
 
                 // 他スレッドから呼び出しもこれで安心
-                _invokeWorker( PrivateSetState );
+                _invokeWorker( SetState );
             }
         }
 
@@ -71,29 +68,32 @@
 
         #endregion 公開メソッド
 
-        private void PrivateSetState()
+        private void SetState()
         {
             switch ( _currentState )
             {
-                // 停止中
-                case Stopped:
-                    _mediaPlayer.LoopCheckBox.Enabled = true;
-                    _mediaPlayer.ClearButton.Enabled = true;
-                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
-                    break;
-
                 // 再生中
                 case Playing:
-                    _mediaPlayer.LoopCheckBox.Enabled = false;
-                    _mediaPlayer.ClearButton.Enabled = false;
-                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_PLAYING;
+                    _mediaControl.LoopCheckBox.Enabled = false;
+                    _mediaControl.ClearButton.Enabled = false;
+                    _mediaControl.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_PLAYING;
+                    _mediaControl.Player.PlayBack();
                     break;
 
-                // 他のメディアプレイヤーの再生により停止中にロック
-                case LockedByOtherPlaying:
-                    _mediaPlayer.LoopCheckBox.Enabled = false;
-                    _mediaPlayer.ClearButton.Enabled = false;
-                    _mediaPlayer.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                // 停止中
+                case Stopped:
+                    _mediaControl.LoopCheckBox.Enabled = true;
+                    _mediaControl.ClearButton.Enabled = true;
+                    _mediaControl.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                    _mediaControl.Player.Stop();
+                    break;
+
+                // 他のメディアプレイヤーの再生により停止中
+                case StoppedByOtherPlayBack:
+                    _mediaControl.LoopCheckBox.Enabled = false;
+                    _mediaControl.ClearButton.Enabled = false;
+                    _mediaControl.FileNameTextBox.ForeColor = COLOR_FILENAME_TEXTBOX_STOP;
+                    _mediaControl.Player.Stop();
                     break;
             }
         }

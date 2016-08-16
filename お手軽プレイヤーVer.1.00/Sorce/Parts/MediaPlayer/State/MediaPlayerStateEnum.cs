@@ -6,18 +6,18 @@
     public enum MediaPlayerStateEnum
     {
         /// <summary>
-        /// 停止中
-        /// </summary>
-        Stopped,
-
-        /// <summary>
         /// 再生中
         /// </summary>
         Playing,
 
         /// <summary>
+        /// 停止中
+        /// </summary>
+        Stopped,
+
+        /// <summary>
         /// 他のメディアプレイヤーの再生により停止中
         /// </summary>
-        LockedByOtherPlaying
+        StoppedByOtherPlayBack
     }
 }

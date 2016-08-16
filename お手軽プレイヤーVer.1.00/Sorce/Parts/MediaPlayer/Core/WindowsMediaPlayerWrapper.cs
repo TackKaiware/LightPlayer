@@ -7,7 +7,7 @@ namespace LightPlayer
     /// <summary>
     /// Windowsメディアプレイヤーのラッパークラス
     /// </summary>
-    public class WmpWrapper
+    public class WindowsMediaPlayerWrapper
     {
         #region 定数
 
@@ -37,7 +37,7 @@ namespace LightPlayer
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public WmpWrapper()
+        public WindowsMediaPlayerWrapper()
         {
             _mediaPlayer.settings.autoStart = false;
             Clear();
@@ -131,7 +131,7 @@ namespace LightPlayer
         }
 
         /// <summary>
-        /// ハッシュコード値いを取得する
+        /// ハッシュコード値を取得する
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()

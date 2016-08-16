@@ -23,11 +23,11 @@ namespace LightPlayer
             var configModel = new ConfigurationModel( provider );
 
             // Controllerの生成
-            var playerContorller = new MediaPlayerController( provider, playerModel );
+            var playerController = new MediaPlayerController( provider, playerModel );
             var configController = new ConfigurationController( provider, configModel );
 
             // Viewのコントロールにイベントハンドラを設定
-            view.SetEventHandler( playerContorller, configController );
+            view.SetEventHandler( playerController, configController );
 
             // アプリケーション開始
             Application.Run( view );

@@ -20,11 +20,11 @@ namespace LightPlayer
         /// <summary>
         /// 保存情報生成用の引数有りコンストラクタ
         /// </summary>
-        public ConfigurationSettings( bool topMost, bool opacity, bool parallelPlayBack, Point location )
+        public ConfigurationSettings( bool topMost, bool opacity, bool parallel, Point location )
         {
             TopMost = topMost;
             Opacity = opacity;
-            ParallelPlayBack = parallelPlayBack;
+            Parallel = parallel;
             Location = location;
         }
 
@@ -47,8 +47,8 @@ namespace LightPlayer
         /// <summary>
         /// 同時再生するか
         /// </summary>
-        [System.Xml.Serialization.XmlElement( "parallelPlayBack" )]
-        public bool ParallelPlayBack { get; set; }
+        [System.Xml.Serialization.XmlElement( "parallel" )]
+        public bool Parallel { get; set; }
 
         /// <summary>
         /// ウィンドウの位置

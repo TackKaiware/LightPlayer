@@ -57,7 +57,7 @@ namespace LightPlayer
         /// <summary>
         /// 同時再生するか否かを設定する
         /// </summary>
-        public void SetParallelPlayBack( bool check ) => _provider.ParallelPlayBackCheckBox.Checked = check;
+        public void SetParallel( bool check ) => _provider.ParallelCheckBox.Checked = check;
 
         /// <summary>
         /// 開始処理（ビューのフォームロード時に呼ぶこと）
@@ -121,7 +121,7 @@ namespace LightPlayer
             //- 読み込んだ設定情報をビューに反映する
             _provider.TopMostCheckBox.Checked = settings.TopMost;
             _provider.OpacityCheckBox.Checked = settings.Opacity;
-            _provider.ParallelPlayBackCheckBox.Checked = settings.ParallelPlayBack;
+            _provider.ParallelCheckBox.Checked = settings.Parallel;
             _provider.Location = settings.Location;
         }
 
@@ -141,7 +141,7 @@ namespace LightPlayer
             var settings = new ConfigurationSettings(
                 _provider.TopMost,
                 _provider.Opacity == OPACITY_FULL ? false : true,
-                _provider.ParallelPlayBackCheckBox.Checked,
+                _provider.ParallelCheckBox.Checked,
                 _provider.Location );
 
             //- 設定情報をXMLファイルに書き込む

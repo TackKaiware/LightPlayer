@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace LightPlayer
 {
-    public partial class MediaPlayer : UserControl
+    public partial class MediaControl : UserControl
     {
         #region フィールド
 
@@ -46,7 +46,8 @@ namespace LightPlayer
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public MediaPlayer( int id, InvolkeWorker invokeWorker )
+        public MediaControl( int id, InvolkeWorker invokeWorker )
+
         {
             InitializeComponent();
 
@@ -58,7 +59,7 @@ namespace LightPlayer
             LoopCheckBox.Name += $"_{ id.ToString() }";
             ClearButton.Name += $"_{ id.ToString() }";
             VolumeBar.Name += $"_{ id.ToString() }";
-            Player = new WmpWrapper();
+            Player = new WindowsMediaPlayerWrapper();
 
             _state = new MediaPlayerState( this, invokeWorker );
         }
@@ -105,7 +106,7 @@ namespace LightPlayer
         /// <summary>
         /// Windowsメディアプレイヤーのラッパークラスオブジェクト
         /// </summary>
-        public WmpWrapper Player { get; }
+        public WindowsMediaPlayerWrapper Player { get; }
 
         #endregion プロパティ
 
@@ -155,7 +156,7 @@ namespace LightPlayer
         /// </summary>
         public void ClearSettings()
         {
-            VolumeBar.Value = WmpWrapper.INIT_VOLUME;
+            VolumeBar.Value = WindowsMediaPlayerWrapper.INIT_VOLUME;
             LoopCheckBox.Checked = false;
             Player.Clear();
             FileNameTextBox.Text = Player.FileName;
@@ -185,7 +186,7 @@ namespace LightPlayer
         {
             if ( obj != null )
             {
-                var other = obj as MediaPlayer;
+                var other = obj as MediaControl;
                 if ( GetHashCode() == other.GetHashCode() )
                     return true;
             }
@@ -195,7 +196,6 @@ namespace LightPlayer
         /// <summary>
         /// ハッシュコード値を取得する
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
             => Id.GetHashCode() ^
                FileNameTextBox.GetHashCode() ^
@@ -205,6 +205,11 @@ namespace LightPlayer
                ClearButton.GetHashCode() ^
                VolumeBar.GetHashCode() ^
                Player.GetHashCode();
+
+        /// <summary>
+        /// 文字列表現を取得する
+        /// </summary>
+        public override string ToString() => $"ID={Id}, File={FileNameTextBox.Text}";
 
         #endregion Objectクラスのオーバーライド
 

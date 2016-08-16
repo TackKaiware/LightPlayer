@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace LightPlayer
@@ -13,7 +14,7 @@ namespace LightPlayer
         /// <summary>
         /// メディアプレイヤーのリスト
         /// </summary>
-        private List<MediaPlayer> _mediaPlayers;
+        private List<MediaControl> _mediaControls;
 
         #endregion フィールド
 
@@ -41,12 +42,11 @@ namespace LightPlayer
             InitializeComponent();
 
             // メディアプレイヤーのリストを生成
-            _mediaPlayers = new List<MediaPlayer>();
-            for ( var id = 0; id < tableLayoutPanel1.RowCount; id++ )
-                _mediaPlayers.Add( new MediaPlayer( id, Invoke ) );
+            var count = tableLayoutPanel1.RowCount;
+            _mediaControls = new MediaControl[count].Select( ( mc, id ) => new MediaControl( id, Invoke ) ).ToList();
 
             // 画面に追加
-            tableLayoutPanel1.Controls.AddRange( _mediaPlayers.ToArray() );
+            tableLayoutPanel1.Controls.AddRange( _mediaControls.ToArray() );
         }
 
         #endregion コンストラクタ
@@ -64,15 +64,15 @@ namespace LightPlayer
             FormClosing += congifCont.View_FormClosing;
             checkBox_TopMost.CheckedChanged += congifCont.TopMostCheckBox_CheckedChanged;
             checkBox_Opacity.CheckedChanged += congifCont.TranslucentCheckBox_CheckedChanged;
-            checkBox_ParallelPlayBack.CheckedChanged += congifCont.ParallelPlayBackCheckBox_CheckedChanged;
+            checkBox_Parallel.CheckedChanged += congifCont.ParallelCheckBox_CheckedChanged;
 
             // メディアプレイヤーコントローラのイベントハンドラを設定
             Load += playerCont.View_Load;
             FormClosing += playerCont.View_FormClosing;
             button_ClearAll.Click += playerCont.ClearAllButton_Click;
-            foreach ( var mp in _mediaPlayers )
+            foreach ( var mc in _mediaControls )
             {
-                mp.SetEventHandler(
+                mc.SetEventHandler(
                     playerCont.FileNameTextBox_DragDrop,
                     playerCont.FileNameTextBox_DragEnter,
                     playerCont.PlayButton_Click,
@@ -88,7 +88,7 @@ namespace LightPlayer
         /// </summary>
         /// <returns></returns>
         public ViewProvider Provide()
-            => new ViewProvider( this, checkBox_TopMost, checkBox_Opacity, checkBox_ParallelPlayBack, _mediaPlayers );
+            => new ViewProvider( this, checkBox_TopMost, checkBox_Opacity, checkBox_Parallel, _mediaControls );
 
         #endregion 公開メソッド
     }

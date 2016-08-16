@@ -72,12 +72,8 @@ namespace LightPlayer
             var paths = ( string[] )e.Data.GetData( DataFormats.FileDrop, false );
 
             if ( paths.Count() > 1 )
-
-                // ２つ以上のファイルをD&Dした場合
                 DroppedMultiFiles( sender, paths );
             else
-
-                // 1つのファイルをD&Dした場合
                 DroppedSingleFile( sender, paths.First() );
         }
 
@@ -87,13 +83,13 @@ namespace LightPlayer
         public void PlayButton_Click( object sender, EventArgs e )
         {
             if ( _model.IsPlayable( sender.GetId() ) )
-                _model.PlayBack( sender.GetId(), _provider.ParallelPlayBackCheckBox.Checked );
+                _model.PlayBack( sender.GetId(), _provider.ParallelCheckBox.Checked );
         }
 
         /// <summary>
         /// 停止ボタンを押下した時の処理
         /// </summary>
-        public void StopButton_Click( object sender, EventArgs e ) => _model.Stop( sender.GetId(), _provider.ParallelPlayBackCheckBox.Checked );
+        public void StopButton_Click( object sender, EventArgs e ) => _model.Stop( sender.GetId(), _provider.ParallelCheckBox.Checked );
 
         /// <summary>
         /// ループ再生チェックボックスを変更した時の処理
@@ -124,9 +120,8 @@ namespace LightPlayer
         /// </summary>
         private void DroppedSingleFile( object sender, string path )
         {
-            // ドロップされたアイテムがファイルの場合でかつ、
-            // メディアプレイヤーに設定済みでない場合
-            if ( File.Exists( path ) && !_model.Exists( path ) )
+            // ドロップされたアイテムがファイルの場合
+            if ( File.Exists( path ) )
                 _model.SetFilePath( sender.GetId(), path );
 
             // フォルダの場合
@@ -139,7 +134,7 @@ namespace LightPlayer
                 // ※再帰的にサブフォルダの内容は取得しない
                 var id = 0;
                 Directory.GetFiles( path )
-                         .Where( p => MediaPlayer.AVAILABLE_FILE_TYPES.Contains( new FileInfo( p ).Extension ) )
+                         .Where( p => MediaControl.AVAILABLE_FILE_TYPES.Contains( new FileInfo( p ).Extension ) )
                          .ToList()
                          .ForEach( f => _model.SetFilePath( id++, f ) );
             }
@@ -151,10 +146,28 @@ namespace LightPlayer
         private void DroppedMultiFiles( object sender, string[] paths )
         {
             var id = sender.GetId();
-            for ( var index = 0; index < paths.Length; index++, id++ )
-                _model.SetFilePath( id, paths[index] );
+            var count = _provider.MediaControls.Count - id;
+            var files = paths.Take( count ).ToList();
+            files.ForEach( f => _model.SetFilePath( id++, f ) );
         }
 
         #endregion 非公開メソッド
     }
+
+    #region ユーティリティクラス
+
+    /// <summary>
+    /// メディアプレイヤーコントローラのユーティリティクラス
+    /// </summary>
+    public static class MediaPlayerControllerUtillity
+    {
+        // このメソッドを呼び出して例外が発生する場合はコントロールの名称の末尾を
+        // "_ + 数字"にできていないプログラムミスのため、例外はキャッチしない
+        /// <summary>
+        /// コントロールの名前の末尾からIDを取得する
+        /// </summary>
+        public static int GetId( this object sender ) => Convert.ToInt32( ( ( Control )sender ).Name.Split( '_' ).Last() );
+    }
+
+    #endregion ユーティリティクラス
 }

@@ -29,13 +29,13 @@ namespace LightPlayer
             CheckBox topMostCheckBox,
             CheckBox opacityCheckBox,
             CheckBox paralledPlayBackCheckBox,
-            List<MediaPlayer> mediaPlayers )
+            List<MediaControl> mediaControls )
         {
             _view = view;
             TopMostCheckBox = topMostCheckBox;
             OpacityCheckBox = opacityCheckBox;
-            ParallelPlayBackCheckBox = paralledPlayBackCheckBox;
-            MediaPlayers = mediaPlayers;
+            ParallelCheckBox = paralledPlayBackCheckBox;
+            MediaControls = mediaControls;
         }
 
         #endregion コンストラクタ
@@ -82,12 +82,12 @@ namespace LightPlayer
         /// <summary>
         /// 同時再生チェックボックスへの参照
         /// </summary>
-        public CheckBox ParallelPlayBackCheckBox { get; }
+        public CheckBox ParallelCheckBox { get; }
 
         /// <summary>
         /// メディアプレイヤーへの参照
         /// </summary>
-        public List<MediaPlayer> MediaPlayers { get; }
+        public List<MediaControl> MediaControls { get; }
 
         #endregion プロパティ
     }

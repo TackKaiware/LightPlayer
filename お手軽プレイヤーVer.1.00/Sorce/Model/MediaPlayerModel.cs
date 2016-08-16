@@ -26,9 +26,14 @@ namespace LightPlayer
         private ViewProvider _provider;
 
         /// <summary>
-        /// プレイヤーが停止したか監視するメソッドのタイマー
+        /// 監視タイマー
         /// </summary>
-        private System.Timers.Timer _timer;
+        private System.Timers.Timer _observationTimer;
+
+        /// <summary>
+        /// 同時再生するか否かの前回値
+        /// </summary>
+        private bool _isParallelPrev;
 
         #endregion フィールド
 
@@ -38,6 +43,11 @@ namespace LightPlayer
         /// メディアプレイヤー設定保存用XMLファイルのフルパス
         /// </summary>
         private static readonly string SETTINGS_XML_PATH = Environment.CurrentDirectory + @"\mplayer.xml";
+
+        /// <summary>
+        /// 監視タイマーの動作周期(ms)
+        /// </summary>
+        private const int OBSERVATION_TIMER_ELAPSED = 100;
 
         #endregion 定数
 
@@ -50,10 +60,12 @@ namespace LightPlayer
         public MediaPlayerModel( ViewProvider viewProvider )
         {
             _provider = viewProvider;
+            _isParallelPrev = viewProvider.ParallelCheckBox.Checked;
 
-            _timer = new System.Timers.Timer();
-            _timer.Elapsed += ObservePlayers;
-            _timer.Interval = 100; // ms;
+            _observationTimer = new System.Timers.Timer();
+            _observationTimer.Elapsed += ObservePlayers;
+            _observationTimer.Elapsed += ObserveParalell;
+            _observationTimer.Interval = OBSERVATION_TIMER_ELAPSED;
         }
 
         #endregion コンストラクタ
@@ -63,69 +75,66 @@ namespace LightPlayer
         /// <summary>
         /// IDで指定したプレイヤーにファイルパスを設定する
         /// </summary>
-        public void SetFilePath( int id, string filePath ) => _provider.MediaPlayers[id].SetFilePath( filePath );
+        public void SetFilePath( int id, string filePath ) => _provider.MediaControls[id].SetFilePath( filePath );
 
         /// <summary>
         /// 指定したIDプレイヤーを再生する
         /// </summary>
-        public void PlayBack( int id, bool isParallelPlayBack = false )
+        public void PlayBack( int id, bool parallel )
         {
-            // 同時再生しないときは再生中のメディアプレイヤーは停止させる
-            if ( !isParallelPlayBack )
+            // 指定されたメディアプレイヤー
+            var selected = _provider.MediaControls[id];
+
+            if ( !parallel )
             {
-                var playingId = _provider.MediaPlayers.GetPlayingId();
-                _provider.MediaPlayers[playingId].Player.Stop();
+                // 同時再生しないときは他のメディアプレイヤーを停止する
+                _provider.MediaControls.ForEach( mc =>
+                {
+                    if ( mc.Id != selected.Id )
+                        mc.SetSate( StoppedByOtherPlayBack );
+                } );
             }
 
-            // 指定したメディアプレイヤーを再生し、
-            // メディアプレイヤーの外観を更新する
-            _provider.MediaPlayers[id].Player.PlayBack();
-            _provider.MediaPlayers[id].SetSate( Playing );
-
-            // メディアプレイヤーの外観を更新
-            foreach ( var mp in _provider.MediaPlayers )
-
-                // 同時再生しないときは他のメディアプレイヤーをロック
-                if ( !isParallelPlayBack && !mp.Equals( _provider.MediaPlayers[id] ) )
-                    mp.SetSate( LockedByOtherPlaying );
+            // 指定されたメディアプレイヤーを再生する
+            selected.Player.PlayBack();
         }
 
         /// <summary>
         /// 指定したIDのプレイヤーを停止する
         /// </summary>
-        public void Stop( int id, bool isParallelPlayBack = false ) => PrivateStop( id, isParallelPlayBack );
+        public void Stop( int id, bool parallel )
+        {
+            // 同時再生する？
+            if ( parallel )
+                _provider.MediaControls[id].SetSate( Stopped );
+            else
+                _provider.MediaControls.ForEach( mc => mc.SetSate( Stopped ) );
+        }
 
         /// <summary>
         /// 指定したIDのプレイヤーのループモードを設定する
         /// </summary>
-        public void SwitchLoopMode( int id ) => _provider.MediaPlayers[id].SwitchLoopMode();
+        public void SwitchLoopMode( int id ) => _provider.MediaControls[id].SwitchLoopMode();
 
         /// <summary>
         /// 指定したIDのプレイヤーの設定を初期化する
         /// </summary>
-        public void ClearSettings( int id ) => _provider.MediaPlayers[id].ClearSettings();
+        public void ClearSettings( int id ) => _provider.MediaControls[id].ClearSettings();
 
         /// <summary>
         /// 指定したIDのプレイヤー音量を設定する
         /// </summary>
-        public void SetVolume( int id, int volume ) => _provider.MediaPlayers[id].SetVolume( volume );
+        public void SetVolume( int id, int volume ) => _provider.MediaControls[id].SetVolume( volume );
 
         /// <summary>
         /// 全てのメディアプレイヤーを初期化する
         /// </summary>
-        public void ClearAllSettings() => _provider.MediaPlayers.ForEach( mp => mp.ClearSettings() );
+        public void ClearAllSettings() => _provider.MediaControls.ForEach( mc => mc.ClearSettings() );
 
         /// <summary>
         /// 指定したIDのメディアプレイヤーが再生可能か？
         /// </summary>
-        public bool IsPlayable( int id ) => !string.IsNullOrWhiteSpace( _provider.MediaPlayers[id].Player.FilePath );
-
-
-        /// <summary>
-        /// 指定さてたファイルが既に設定済みか
-        /// </summary>
-        public bool Exists( string filePath ) => _provider.MediaPlayers.Exists( mp => mp.Player.FilePath.Equals( filePath ) );
-
+        public bool IsPlayable( int id ) => !string.IsNullOrWhiteSpace( _provider.MediaControls[id].Player.FilePath );
 
         /// <summary>
         /// 開始処理（ビューのフォームロード時に呼ぶこと）
@@ -150,7 +159,7 @@ namespace LightPlayer
             finally
             {
                 // タイマーを開始
-                _timer.Start();
+                _observationTimer.Start();
             }
         }
 
@@ -172,7 +181,7 @@ namespace LightPlayer
             finally
             {
                 // タイマーを停止
-                _timer.Stop();
+                _observationTimer.Stop();
             }
         }
 
@@ -185,39 +194,30 @@ namespace LightPlayer
         /// </summary>
         private void ObservePlayers( object sender, ElapsedEventArgs e )
         {
-            var played = new List<MediaPlayer>();
-            Parallel.ForEach( _provider.MediaPlayers, ( mp ) =>
+            var played = new List<MediaControl>();
+            Parallel.ForEach( _provider.MediaControls, ( mc ) =>
             {
-                if ( mp.GetState().Equals( Playing ) && mp.Player.IsStopped )
-                    played.Add( mp );
+                if ( mc.GetState().Equals( Playing ) && mc.Player.IsStopped )
+                    played.Add( mc );
             } );
 
             // 停止状態にする
-            played.ForEach( p => PrivateStop( p, _provider.ParallelPlayBackCheckBox.Checked ) );
+            played.ForEach( p => Stop( p.Id, _provider.ParallelCheckBox.Checked ) );
         }
 
         /// <summary>
-        /// プレイヤーの停止
-        /// 公開メソッドStop()からのコール用
+        /// 同時再生するかのチェックボックスを監視し、
+        /// チェック状態が切り替わったら全プレイヤーを停止させる
         /// </summary>
-        private void PrivateStop( int id, bool isParallelPlayBack = false ) => PrivateStop( _provider.MediaPlayers[id], isParallelPlayBack );
-
-
-        /// <summary>
-        /// プレイヤーの停止
-        /// 非公開メソッドObservePlayers()からのコール用
-        /// </summary>
-        private void PrivateStop( MediaPlayer player, bool isParallelPlayBack = false )
+        private void ObserveParalell( object sender, ElapsedEventArgs e )
         {
-            // 同時再生しない場合
-            if ( !isParallelPlayBack )
-                _provider.MediaPlayers.ForEach( mp => mp.SetSate( Stopped ) );
+            var isParallalCurrent = _provider.ParallelCheckBox.Checked;
 
-            // 同時再生する場合
-            else
-                player.SetSate( Stopped );
+            if ( _isParallelPrev != isParallalCurrent )
+                _provider.MediaControls.ForEach( mc => mc.Player.Stop() );
 
-            player.Player.Stop();
+            // 前回値更新
+            _isParallelPrev = isParallalCurrent;
         }
 
         /// <summary>
@@ -237,17 +237,17 @@ namespace LightPlayer
                 SETTINGS_XML_PATH, typeof( MediaPlayerSettingsList ) );
 
             //- 読み込んだ設定情報をメディアプレイヤーに反映する
-            _provider.MediaPlayers.ForEach( mp =>
+            _provider.MediaControls.ForEach( mc =>
             {
-                var settings = settingsList.Find( s => s.Id == mp.Id );
+                var settings = settingsList.Find( s => s.Id == mc.Id );
 
-                mp.Player.FilePath = settings.FilePath;
-                mp.Player.LoopMode = settings.LoopMode;
-                mp.Player.Volume = settings.Volume;
+                mc.Player.FilePath = settings.FilePath;
+                mc.Player.LoopMode = settings.LoopMode;
+                mc.Player.Volume = settings.Volume;
 
-                mp.FileNameTextBox.Text = mp.Player.FileName;
-                mp.LoopCheckBox.Checked = mp.Player.LoopMode;
-                mp.VolumeBar.Value = mp.Player.Volume;
+                mc.FileNameTextBox.Text = mc.Player.FileName;
+                mc.LoopCheckBox.Checked = mc.Player.LoopMode;
+                mc.VolumeBar.Value = mc.Player.Volume;
             } );
         }
 
@@ -265,20 +265,19 @@ namespace LightPlayer
 
             //- メディアプレイヤーの設定情報を生成・リストに追加する
             var settingsList = new MediaPlayerSettingsList();
-            _provider.MediaPlayers.ForEach( mp =>
+            _provider.MediaControls.ForEach( mc =>
             {
                 settingsList.Add( new MediaPlayerSettings(
-                    mp.Id,
-                    mp.Player.FilePath,
-                    mp.Player.LoopMode,
-                    mp.Player.Volume ) );
+                    mc.Id,
+                    mc.Player.FilePath,
+                    mc.Player.LoopMode,
+                    mc.Player.Volume ) );
             } );
 
             //- 設定情報をXMLファイルに書き込む
             //- XmlAccesser.Write()から例外がスローされた場合は
             //- ここでcatchせずにそのままコルー元に伝播させる
-            XmlAccesser.Write( SETTINGS_XML_PATH,
-                typeof( MediaPlayerSettingsList ), settingsList );
+            XmlAccesser.Write( SETTINGS_XML_PATH, typeof( MediaPlayerSettingsList ), settingsList );
         }
 
         #endregion 非公開メソッド
@@ -303,7 +302,7 @@ namespace LightPlayer
                 if ( disposing )
                 {
                     // TODO: マネージ状態を破棄します (マネージ オブジェクト)。
-                    ( ( IDisposable )_timer ).Dispose();
+                    ( ( IDisposable )_observationTimer ).Dispose();
                 }
 
                 // TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下のファイナライザーをオーバーライドします。

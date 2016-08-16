@@ -64,16 +64,16 @@ namespace LightPlayer
         /// <summary>
         /// 同時再生するのチェックを変更した時の処理
         /// </summary>
-        public void ParallelPlayBackCheckBox_CheckedChanged( object sender, EventArgs e )
+        public void ParallelCheckBox_CheckedChanged( object sender, EventArgs e )
         {
             var checkBox = ( CheckBox )sender;
 
             // SetParallelPlayBack()の中でこのチェックボックスのチェック状態を書き換えている。
             // 無限呼び出しを回避するため、一時的にイベントハンドラを解除し、
             // SetParallelPlayBack()完了後、再び割り当てている。
-            checkBox.CheckedChanged -= ParallelPlayBackCheckBox_CheckedChanged;
-            _model.SetParallelPlayBack( ( ( CheckBox )sender ).Checked );
-            checkBox.CheckedChanged += ParallelPlayBackCheckBox_CheckedChanged;
+            checkBox.CheckedChanged -= ParallelCheckBox_CheckedChanged;
+            _model.SetParallel( ( ( CheckBox )sender ).Checked );
+            checkBox.CheckedChanged += ParallelCheckBox_CheckedChanged;
         }
 
         #endregion イベントハンドラ
