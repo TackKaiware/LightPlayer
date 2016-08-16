@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{53ECE68D-6BDC-4810-AF82-9AC43383DD0A}</ProjectGuid>
+    <ProjectGuid>{9A5F96FC-509D-4AB5-BFEF-A49A665DD938}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LightPlayer</RootNamespace>
