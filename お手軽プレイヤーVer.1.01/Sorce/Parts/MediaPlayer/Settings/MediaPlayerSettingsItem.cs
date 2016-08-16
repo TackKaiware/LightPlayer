@@ -3,21 +3,21 @@
     /// <summary>
     /// メディアプレイヤー（1つ分）の保存情報
     /// </summary>
-    public class MediaPlayerSettings
+    public class MediaPlayerSettingsItem
     {
         #region コンストラクタ
 
         /// <summary>
         /// XML読み書き用のデフォルトコンストラクタ
         /// </summary>
-        public MediaPlayerSettings()
+        public MediaPlayerSettingsItem()
         {
         }
 
         /// <summary>
         /// 保存情報生成用の引数有りコンストラクタ-
         /// </summary>
-        public MediaPlayerSettings( int id, string filePath, bool loopMode, int volume )
+        public MediaPlayerSettingsItem( int id, string filePath, bool loopMode, int volume )
         {
             Id = id;
             FilePath = filePath;

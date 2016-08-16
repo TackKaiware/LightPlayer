@@ -49,7 +49,7 @@ namespace LightPlayer
         /// <summary>
         /// フォームを閉じる時の処理
         /// </summary>
-        public void View_FormClosing( object sender, FormClosingEventArgs e ) => _model.EndProcces();
+        public void View_FormClosing( object sender, FormClosingEventArgs e ) => _model.EndProcess();
 
         #endregion IControllerの実装
 

@@ -8,17 +8,17 @@ namespace LightPlayer
     /// メディアプレイヤー（全部）の保存情報クラス
     /// </summary>
 
-    [System.Xml.Serialization.XmlRoot( "mediaPlyaers" )]
-    public class MediaPlayerSettingsList : IEnumerable<MediaPlayerSettings>
+    [System.Xml.Serialization.XmlRoot( "settings" )]
+    public class MediaPlayerSettings : IEnumerable<MediaPlayerSettingsItem>
     {
         #region コンストラクタ
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public MediaPlayerSettingsList()
+        public MediaPlayerSettings()
         {
-            SettingsList = new List<MediaPlayerSettings>();
+            SettingsList = new List<MediaPlayerSettingsItem>();
         }
 
         #endregion コンストラクタ
@@ -29,7 +29,7 @@ namespace LightPlayer
         /// メディアプレイヤー（全部）の保存情報リスト
         /// </summary>
         [System.Xml.Serialization.XmlElement( "mediaPlyaer" )]
-        public List<MediaPlayerSettings> SettingsList { get; set; }
+        public List<MediaPlayerSettingsItem> SettingsList { get; set; }
 
         #endregion プロパティ
 
@@ -38,7 +38,7 @@ namespace LightPlayer
         /// <summary>
         /// メディアプレイヤーの保存設定を追加する
         /// </summary>
-        public void Add( MediaPlayerSettings settings )
+        public void Add( MediaPlayerSettingsItem settings )
         {
             SettingsList.Add( settings );
         }
@@ -46,7 +46,7 @@ namespace LightPlayer
         /// <summary>
         /// メディアプレイヤーの保存設定を削除する
         /// </summary>
-        public void Remove( MediaPlayerSettings setings )
+        public void Remove( MediaPlayerSettingsItem setings )
         {
             SettingsList.Remove( setings );
         }
@@ -56,12 +56,12 @@ namespace LightPlayer
         /// </summary>
         /// <param name="match"></param>
         /// <returns></returns>
-        public MediaPlayerSettings Find( Predicate<MediaPlayerSettings> match ) => SettingsList.Find( match );
+        public MediaPlayerSettingsItem Find( Predicate<MediaPlayerSettingsItem> match ) => SettingsList.Find( match );
 
         /// <summary>
         /// IEnumerable<T>の実装
         /// </summary>
-        public IEnumerator<MediaPlayerSettings> GetEnumerator()
+        public IEnumerator<MediaPlayerSettingsItem> GetEnumerator()
         {
             foreach ( var settings in SettingsList )
             {

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Forms;
 using static LightPlayer.MediaPlayerStateEnum;
+using ItemType = LightPlayer.MediaPlayerSettingsItem;
+using SettingsType = LightPlayer.MediaPlayerSettings;
 
 namespace LightPlayer
 {
     /// <summary>
     /// メディアプレイヤーモデルクラス
     /// </summary>
-    public class MediaPlayerModel : IDisposable
+    public class MediaPlayerModel : ReadWriteModel, IDisposable
     {
         #region フィールド
 
@@ -40,14 +40,14 @@ namespace LightPlayer
         #region 定数
 
         /// <summary>
-        /// メディアプレイヤー設定保存用XMLファイルのフルパス
-        /// </summary>
-        private static readonly string SETTINGS_XML_PATH = Environment.CurrentDirectory + @"\mplayer.xml";
-
-        /// <summary>
         /// 監視タイマーの動作周期(ms)
         /// </summary>
         private const int OBSERVATION_TIMER_ELAPSED = 100;
+
+        /// <summary>
+        /// メディアプレイヤー設定保存用XMLファイルのフルパス
+        /// </summary>
+        private static readonly string SETTINGS_FILE_PATH = "mplayer.xml";
 
         #endregion 定数
 
@@ -58,6 +58,8 @@ namespace LightPlayer
         /// </summary>
         /// <param name="mediaPlayers"></param>
         public MediaPlayerModel( ViewProvider viewProvider )
+            : base( SETTINGS_FILE_PATH, new SettingsType(), typeof( SettingsType ) )
+
         {
             _provider = viewProvider;
             _isParallelPrev = viewProvider.ParallelCheckBox.Checked;
@@ -136,55 +138,6 @@ namespace LightPlayer
         /// </summary>
         public bool IsPlayable( int id ) => !string.IsNullOrWhiteSpace( _provider.MediaControls[id].Player.FilePath );
 
-        /// <summary>
-        /// 開始処理（ビューのフォームロード時に呼ぶこと）
-        /// </summary>
-        public void StartProcess()
-        {
-            try
-            {
-                // 設定情報をメディアプレイヤーに読み込む
-                LoadSettings();
-            }
-            catch ( FileNotFoundException )
-            {
-                // 初回起動時はXMLファイルが存在しないため新規作成する
-                SaveSettings();
-            }
-            catch ( InvalidOperationException )
-            {
-                // 読み込み失敗時の処理
-                SaveSettings();
-            }
-            finally
-            {
-                // タイマーを開始
-                _observationTimer.Start();
-            }
-        }
-
-        /// <summary>
-        /// 終了処理（ビューのフォームクロージング時に呼ぶこと）
-        /// </summary>
-        public void EndProcces()
-        {
-            try
-            {
-                // 設定情報を書き込む
-                SaveSettings();
-            }
-            catch ( InvalidOperationException )
-            {
-                // 書き込み失敗時
-                MessageBox.Show( "設定の保存に失敗しました。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error );
-            }
-            finally
-            {
-                // タイマーを停止
-                _observationTimer.Stop();
-            }
-        }
-
         #endregion 公開メソッド
 
         #region 非公開メソッド
@@ -220,30 +173,34 @@ namespace LightPlayer
             _isParallelPrev = isParallalCurrent;
         }
 
+        #endregion 非公開メソッド
+
+        #region ReadWriteModelの抽象メソッドの実装
+
         /// <summary>
-        /// メディアプレイヤー（全部）の設定を読み込む
+        /// 開始処理にてfinally節で実行する処理
         /// </summary>
-        private void LoadSettings()
+        protected override void FinallyAtStartProcess() => _observationTimer.Start(); // タイマーを開始
+
+        /// <summary>
+        /// 終了処理にてfinally節で実行する処理
+        /// </summary>
+        protected override void FinallyAtEndProcess() => _observationTimer.Stop();// タイマーを停止
+
+        /// <summary>
+        /// R/W用オブジェクトから設定を反映する
+        /// </summary>
+        protected override void LoadSettings()
         {
-            //- 読み込むのXMLファイルの存在をチェックする
-            //- 存在しない場合は例外をスローする
-            if ( !File.Exists( SETTINGS_XML_PATH ) )
-                throw new FileNotFoundException();
-
-            //- XMLファイルから設定情報を読み込む
-            //- XmlAccesser.Read()から例外がスローされた場合は
-            //- ここでcatchせずにそのままコルー元に伝播させる
-            var settingsList = ( MediaPlayerSettingsList )XmlAccesser.Read(
-                SETTINGS_XML_PATH, typeof( MediaPlayerSettingsList ) );
-
             //- 読み込んだ設定情報をメディアプレイヤーに反映する
+            var settings = ( SettingsType )Convert.ChangeType( _settings, typeof( SettingsType ) );
             _provider.MediaControls.ForEach( mc =>
             {
-                var settings = settingsList.Find( s => s.Id == mc.Id );
+                var item = settings.Find( s => s.Id == mc.Id );
 
-                mc.Player.FilePath = settings.FilePath;
-                mc.Player.LoopMode = settings.LoopMode;
-                mc.Player.Volume = settings.Volume;
+                mc.Player.FilePath = item.FilePath;
+                mc.Player.LoopMode = item.LoopMode;
+                mc.Player.Volume = item.Volume;
 
                 mc.FileNameTextBox.Text = mc.Player.FileName;
                 mc.LoopCheckBox.Checked = mc.Player.LoopMode;
@@ -252,35 +209,24 @@ namespace LightPlayer
         }
 
         /// <summary>
-        /// メディアプレイヤー（全部）の設定を保存する
+        /// 現在の設定をR/W用オブジェクトに格納する
         /// </summary>
-        private void SaveSettings()
-        {
-            //- 書き込み先のXMLファイルの存在をチェックする
-            //- 存在しない場合は新規作成する
-            if ( !File.Exists( SETTINGS_XML_PATH ) )
-                using ( var stream = File.Create( SETTINGS_XML_PATH ) )
-                {
-                }
 
+        protected override void StoreSettings()
+        {
             //- メディアプレイヤーの設定情報を生成・リストに追加する
-            var settingsList = new MediaPlayerSettingsList();
+            _settings = new SettingsType();
             _provider.MediaControls.ForEach( mc =>
             {
-                settingsList.Add( new MediaPlayerSettings(
+                ( ( SettingsType )_settings ).Add( new ItemType(
                     mc.Id,
                     mc.Player.FilePath,
                     mc.Player.LoopMode,
                     mc.Player.Volume ) );
             } );
-
-            //- 設定情報をXMLファイルに書き込む
-            //- XmlAccesser.Write()から例外がスローされた場合は
-            //- ここでcatchせずにそのままコルー元に伝播させる
-            XmlAccesser.Write( SETTINGS_XML_PATH, typeof( MediaPlayerSettingsList ), settingsList );
         }
 
-        #endregion 非公開メソッド
+        #endregion ReadWriteModelの抽象メソッドの実装
 
         #region IDisposable Support
         private bool disposedValue = false; // 重複する呼び出しを検出するには

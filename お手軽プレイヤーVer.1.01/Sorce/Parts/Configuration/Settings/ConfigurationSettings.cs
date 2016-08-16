@@ -5,7 +5,7 @@ namespace LightPlayer
     /// <summary>
     /// プレイヤー設定の保存情報
     /// </summary>
-    [System.Xml.Serialization.XmlRoot( "config" )]
+    [System.Xml.Serialization.XmlRoot( "settings" )]
     public class ConfigurationSettings
     {
         #region コンストラクタ

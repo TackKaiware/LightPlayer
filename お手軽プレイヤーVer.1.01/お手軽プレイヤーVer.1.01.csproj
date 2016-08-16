@@ -83,6 +83,7 @@
     <Compile Include="Sorce\Control\IController.cs" />
     <Compile Include="Sorce\Control\MediaPlayerController.cs" />
     <Compile Include="Sorce\Delegate\Delegates.cs" />
+    <Compile Include="Sorce\Model\ReadWriteModel.cs" />
     <Compile Include="Sorce\Parts\Configuration\Settings\ConfigurationSettings.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\Core\MediaControl.cs">
       <SubType>UserControl</SubType>
@@ -92,8 +93,8 @@
     </Compile>
     <Compile Include="Sorce\Parts\MediaPlayer\State\MediaPlayerState.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\State\MediaPlayerStateEnum.cs" />
+    <Compile Include="Sorce\Parts\MediaPlayer\Settings\MediaPlayerSettingsItem.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\Settings\MediaPlayerSettings.cs" />
-    <Compile Include="Sorce\Parts\MediaPlayer\Settings\MediaPlayerSettingsList.cs" />
     <Compile Include="Sorce\Parts\MediaPlayer\Core\WindowsMediaPlayerWrapper.cs" />
     <Compile Include="Sorce\Model\ConfigurationModel.cs" />
     <Compile Include="Sorce\Model\MediaPlayerModel.cs" />
@@ -137,17 +138,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="WMPLib">
-      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\icon-16.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +163,17 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
